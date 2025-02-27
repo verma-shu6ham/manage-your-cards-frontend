@@ -1,0 +1,41 @@
+/* Modern Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scroll-track-color, rgba(0, 0, 0, 0.1));
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scroll-thumb-color, rgba(99, 102, 241, 0.3));
+  border-radius: 10px;
+  border: 2px solid var(--scroll-track-color, rgba(0, 0, 0, 0.1));
+  transition: background-color 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scroll-thumb-hover-color, rgba(99, 102, 241, 0.5));
+}
+
+/* Firefox Scrollbar Styles */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scroll-thumb-color, rgba(99, 102, 241, 0.3)) var(--scroll-track-color, rgba(0, 0, 0, 0.1));
+}
+
+/* Custom scroll container class */
+.custom-scroll {
+  overflow: auto;
+  scrollbar-gutter: stable;
+}
+
+/* Hide scrollbar for mobile devices */
+@media (max-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+} 
