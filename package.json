@@ -18,7 +18,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build &&  xcopy /s /e build\\* ..\\backend\\client\\build\\",
+    "build": "react-scripts build && rmdir /s /q ..\\backend\\client && xcopy /s /e build\\* ..\\backend\\client\\build\\",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
