@@ -58,7 +58,6 @@ const EditTransactionModal = ({ isOpen, onClose, transaction, onTransactionEdite
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     if (name === 'date') {
       const oldTime = formData.transactionDate.split('T')[1];
       const newDate = new Date(`${value}T${oldTime}`).toISOString()
@@ -74,6 +73,11 @@ const EditTransactionModal = ({ isOpen, onClose, transaction, onTransactionEdite
         'transactionDate': newDate
       }));
     } else if (name === 'category') {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value,
+        'subcategory': ''
+      }));
       updateSubcategories(value);
     } else if (name === 'amount') {
       setFormData(prev => ({
@@ -184,9 +188,13 @@ const EditTransactionModal = ({ isOpen, onClose, transaction, onTransactionEdite
               value={formData.subcategory}
               onChange={handleChange}
             >
-              {subcategories.length > 0 ? subcategories.map((subCat, index) =>
+              {!formData.subcategory && subcategories.length > 0 ? <option key="subcategory" value="" disabled>Select a subcategory (optional)</option>
+                : <option key="no-subcategories" value="" disabled>No subcategories</option>}
+              
+              {formData.subcategory && subcategories.map((subCat, index) =>
                 (formData.subcategory === _.kebabCase(subCat) && <option key={index} value={subCat}>{subCat}</option>)
-              ) : <option key="no-subcategories" value="" disabled>No subcategories</option>}
+              )}
+
               {subcategories.map((subCat, index) =>
                 (formData.subcategory !== _.kebabCase(subCat) && <option key={index} value={subCat}>{subCat}</option>)
               )}
