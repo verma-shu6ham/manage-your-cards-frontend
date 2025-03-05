@@ -41,9 +41,9 @@ export const login = async (email, password) => {
   }
 }
 
-export const signup = async (name, email, password) => {
+export const signup = async (name, email, locale, password) => {
   try {
-    const response = await api.post("/auth/signup", { name, email, password })
+    const response = await api.post("/auth/signup", { name, email, locale, password })
     return response.data
   } catch (err) {
     throw new Error(err.response?.data?.message || "Signup failed. Please try again.")
@@ -160,8 +160,8 @@ export const getMonthlySpending = async (params) => {
     cleanParams.spendingType = 'monthly';
 
 
-    const response = await api.get("/transactions/monthly-spending", { 
-      params: cleanParams 
+    const response = await api.get("/transactions/monthly-spending", {
+      params: cleanParams
     });
 
     return response.data;
@@ -180,8 +180,8 @@ export const getBillingSpending = async (params) => {
     }, {});
     cleanParams.spendingType = 'billing';
 
-    const response = await api.get("/transactions/monthly-spending", { 
-      params: cleanParams 
+    const response = await api.get("/transactions/monthly-spending", {
+      params: cleanParams
     });
     return response.data.monthlySummary[0];
   } catch (err) {
@@ -198,8 +198,8 @@ export const getSpendingSummary = async (params) => {
       return acc;
     }, {});
 
-    const response = await api.get("/transactions/spending-summary", { 
-      params: cleanParams 
+    const response = await api.get("/transactions/spending-summary", {
+      params: cleanParams
     });
     return response.data.summary;
   } catch (err) {
@@ -239,9 +239,18 @@ export const getUserCategories = async () => {
   }
 }
 
-export const addCategory = async ({category, subcategory}) => {
+export const updateLocale = async (locale) => {
   try {
-    const response = await api.post("user/categories", {category, subcategory})
+    const response = await api.patch("/user/locale", { locale })
+    return response.data
+  } catch (err) {
+    throw new Error(err.response?.data?.message || "Failed to update country")
+  }
+}
+
+export const addCategory = async ({ category, subcategory }) => {
+  try {
+    const response = await api.post("user/categories", { category, subcategory })
     return response.data
   } catch (err) {
     throw new Error(err.response?.data?.message || "Failed to add category/subcategory")

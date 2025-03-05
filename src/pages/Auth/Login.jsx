@@ -2,15 +2,16 @@ import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { login } from "../../services/api"
 import { useAuth } from "../../contexts/AuthContext/AuthContext"
-import "./Auth.css"
+import "./Auth.css";
 
 function Login() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
-  const { setUser } = useAuth()
+  const { setUser, setLocale } = useAuth()  
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -20,11 +21,11 @@ function Login() {
       const data = await login(email, password)
       if (data && data.user) {
         localStorage.setItem('token', data.token)
+        setLocale(data.user.locale)
         setUser(data.user)
         navigate("/")
       }
     } catch (err) {
-      // console.error("Login error:", err)
       setError(err.message || "Failed to log in. Please check your credentials.")
     } finally {
       setLoading(false)
@@ -36,7 +37,7 @@ function Login() {
       <h2>Welcome Back</h2>
       {error && <div className="error">{error}</div>}
       <form onSubmit={handleSubmit} className="auth-form">
-        <div className="auth-form">
+        <span className="label-input">
           <label htmlFor="email">Email</label>
           <input
             id="email"
@@ -46,18 +47,19 @@ function Login() {
             required
             placeholder="Enter your email"
           />
-        </div>
-        <div className="auth-form">
+        </span>
+        <span className="label-input">
           <label htmlFor="password">Password</label>
           <input
             id="password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             placeholder="Enter your password"
           />
-        </div>
+          <button className="show-password"  type="button" onClick={() => setShowPassword(prev => !prev)}>{showPassword ? `Hide` : 'Show'}</button>
+        </span>
         <button type="submit" disabled={loading}>
           {loading ? "Logging in..." : "Log In"}
         </button>

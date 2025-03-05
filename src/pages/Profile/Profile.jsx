@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { addCategory, deleteCategory, getUserCategories, getProfile, getAllCards, deleteCard, deleteAccount } from "../../services/api"
+import { addCategory, deleteCategory, getUserCategories, getProfile, updateLocale, getAllCards, deleteCard, deleteAccount } from "../../services/api"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt, faUser, faTrash, faCog, faListUl, faInfoCircle, faCreditCard } from "@fortawesome/free-solid-svg-icons";
 import Loading from "../../components/Loading/Loading"
@@ -23,8 +23,15 @@ function Profile() {
   const [profileData, setProfileData] = useState(null)
   const [cards, setCards] = useState([])
 
-  const handleCurrencyChange = (newLocale) => {
-    setLocale(newLocale)
+  const handleCurrencyChange = async(newLocale) => {
+    try {
+      const data = await updateLocale(newLocale)
+      setLocale(data.locale)
+      setLoading(false)
+    } catch (err) {
+      setError("Failed to update country")
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -192,7 +199,7 @@ function Profile() {
           value={locale}
           onChange={(e) => handleCurrencyChange(e.target.value)}
         >
-          {Object.entries(localeCurrencyMap).map(([loc, currency]) => (
+          {Object.entries(localeCurrencyMap).map(([loc, {country, currency}]) => (
             <option key={loc} value={loc}>
               {new Intl.DisplayNames([loc], { type: 'region' }).of(loc.split('-')[1])} ({currency})
             </option>

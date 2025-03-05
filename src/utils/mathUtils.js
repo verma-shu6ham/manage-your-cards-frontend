@@ -12,7 +12,7 @@ export const onlyPositiveValue = (value, setter) => {
 export function formatNumber(number, locale, minFrac = 2, maxFrac = 2, currency = '') {
   return number.toLocaleString(locale, {
     style: 'currency',
-    currency: localeCurrencyMap[locale],
+    currency: localeCurrencyMap[locale].currency,
     minimumFractionDigits: minFrac,
     maximumFractionDigits: maxFrac
   });

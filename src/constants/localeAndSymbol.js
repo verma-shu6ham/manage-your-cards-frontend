@@ -1,97 +1,92 @@
 export const localeCurrencyMap = {
-    'en-US': 'USD',  // United States Dollar ($)
-    'en-GB': 'GBP',  // British Pound (£)
-    'en-IN': 'INR',  // Indian Rupee (₹)
-    'en-AU': 'AUD',  // Australian Dollar (A$)
-    'en-CA': 'CAD',  // Canadian Dollar (C$)
-    'en-NZ': 'NZD',  // New Zealand Dollar (NZ$)
-    'en-ZA': 'ZAR',  // South African Rand (R)
-    'en-IE': 'EUR',  // Euro (€) - Ireland
-    'de-DE': 'EUR',  // Euro (€) - Germany
-    'fr-FR': 'EUR',  // Euro (€) - France
-    'it-IT': 'EUR',  // Euro (€) - Italy
-    'es-ES': 'EUR',  // Euro (€) - Spain
-    'pt-PT': 'EUR',  // Euro (€) - Portugal
-    'nl-NL': 'EUR',  // Euro (€) - Netherlands
-    'ru-RU': 'RUB',  // Russian Ruble (₽)
-    'ja-JP': 'JPY',  // Japanese Yen (¥)
-    'zh-CN': 'CNY',  // Chinese Yuan (¥)
-    'ko-KR': 'KRW',  // South Korean Won (₩)
-    'ar-SA': 'SAR',  // Saudi Riyal (ر.س)
-    'hi-IN': 'INR',  // Indian Rupee (₹) - Hindi
-    'zh-TW': 'TWD',  // New Taiwan Dollar (NT$)
-    'tr-TR': 'TRY',  // Turkish Lira (₺)
-    'pl-PL': 'PLN',  // Polish Zloty (zł)
-    'no-NO': 'NOK',  // Norwegian Krone (kr)
-    'sv-SE': 'SEK',  // Swedish Krona (kr)
-    'fi-FI': 'EUR',  // Euro (€) - Finland
-    'da-DK': 'DKK',  // Danish Krone (kr)
-    'cs-CZ': 'CZK',  // Czech Koruna (Kč)
-    'sk-SK': 'EUR',  // Euro (€) - Slovakia
-    'hu-HU': 'HUF',  // Hungarian Forint (Ft)
-    'ro-RO': 'RON',  // Romanian Leu (lei)
-    'bg-BG': 'BGN',  // Bulgarian Lev (лв)
-    'hr-HR': 'HRK',  // Croatian Kuna (kn)
-    'sr-RS': 'RSD',  // Serbian Dinar (дин)
-    'ua-UA': 'UAH',  // Ukrainian Hryvnia (₴)
-    'lt-LT': 'EUR',  // Euro (€) - Lithuania
-    'lv-LV': 'EUR',  // Euro (€) - Latvia
-    'ee-EE': 'EUR',  // Euro (€) - Estonia
-    'is-IS': 'ISK',  // Icelandic Krona (kr)
-    'mt-MT': 'EUR',  // Euro (€) - Malta
-    'bg-BG': 'BGN',  // Bulgarian Lev (лв)
-    'mk-MK': 'MKD',  // Macedonian Denar (ден)
-    'si-LK': 'LKR',  // Sri Lankan Rupee (Rs)
-    'bn-BD': 'BDT',  // Bangladeshi Taka (৳)
-    'ne-NP': 'NPR',  // Nepalese Rupee (Rs)
-    'th-TH': 'THB',  // Thai Baht (฿)
-    'vi-VN': 'VND',  // Vietnamese Dong (₫)
-    'my-MY': 'MYR',  // Malaysian Ringgit (RM)
-    'ph-PH': 'PHP',  // Philippine Peso (₱)
-    'id-ID': 'IDR',  // Indonesian Rupiah (Rp)
-    'kh-KH': 'KHR',  // Cambodian Riel (៛)
-    'la-LA': 'LAK',  // Laotian Kip (₭)
-    'mm-MM': 'MMK',  // Myanmar Kyat (Ks)
-    'mn-MN': 'MNT',  // Mongolian Tugrik (₮)
-    'uz-UZ': 'UZS',  // Uzbekistani Som (so'm)
-    'kz-KZ': 'KZT',  // Kazakhstani Tenge (₸)
-    'ge-GE': 'GEL',  // Georgian Lari (₾)
-    'az-AZ': 'AZN',  // Azerbaijani Manat (₼)
-    'am-AM': 'AMD',  // Armenian Dram (դր.)
-    'tn-TN': 'TND',  // Tunisian Dinar (د.ت)
-    'eg-EG': 'EGP',  // Egyptian Pound (ج.م)
-    'ma-MA': 'MAD',  // Moroccan Dirham (د.م.)
-    'dz-DZ': 'DZD',  // Algerian Dinar (دج)
-    'ly-LY': 'LYD',  // Libyan Dinar (د.ل)
-    'ke-KE': 'KES',  // Kenyan Shilling (KSh)
-    'ng-NG': 'NGN',  // Nigerian Naira (₦)
-    'za-ZA': 'ZAR',  // South African Rand (R)
-    'ae-AE': 'AED',  // United Arab Emirates Dirham (د.إ)
-    'il-IL': 'ILS',  // Israeli New Shekel (₪)
-    'cl-CL': 'CLP',  // Chilean Peso ($)
-    'pe-PE': 'PEN',  // Peruvian Nuevo Sol (S/.)
-    'co-CO': 'COP',  // Colombian Peso ($)
-    'ar-AR': 'ARS',  // Argentine Peso ($)
-    'mx-MX': 'MXN',  // Mexican Peso ($)
-    'ec-EC': 'USD',  // US Dollar ($) - Ecuador
-    'bo-BO': 'BOB',  // Bolivian Boliviano (Bs)
-    'py-PY': 'PYG',  // Paraguayan Guarani (Gs)
-    'do-DO': 'DOP',  // Dominican Peso (RD$)
-    'cr-CR': 'CRC',  // Costa Rican Colón (₡)
-    'pa-PA': 'PAB',  // Panamanian Balboa (B/.)
-    'sv-SV': 'SVC',  // Salvadoran Colón (₡)
-    'gt-GT': 'GTQ',  // Guatemalan Quetzal (Q)
-    'hn-HN': 'HNL',  // Honduran Lempira (L)
-    'ni-NI': 'NIO',  // Nicaraguan Córdoba (C$)
-    'cu-CU': 'CUP',  // Cuban Peso (₱)
-    'py-PY': 'PYG',  // Paraguayan Guarani (Gs)
-    'jm-JM': 'JMD',  // Jamaican Dollar (J$)
-    'tt-TT': 'TTD',  // Trinidad and Tobago Dollar (TT$)
-    'bz-BZ': 'BZD',  // Belize Dollar (Bz$)
-    'ht-HT': 'HTG',  // Haitian Gourde (G)
-    'ws-WS': 'WST',  // Samoan Tala (T)
-    'tv-TV': 'AUD',  // Australian Dollar (A$) - Tuvalu
-    'pf-PF': 'XPF',  // CFP Franc (₣) - French Polynesia
-    'wf-WF': 'XPF',  // CFP Franc (₣) - Wallis and Futuna
-  };
-  
+  'en-US': { country: 'United States', currency: 'USD' },
+  'en-GB': { country: 'United Kingdom', currency: 'GBP' },
+  'en-AU': { country: 'Australia', currency: 'AUD' },
+  'en-CA': { country: 'Canada', currency: 'CAD' },
+  'en-NZ': { country: 'New Zealand', currency: 'NZD' },
+  'en-ZA': { country: 'South Africa', currency: 'ZAR' },
+  'de-DE': { country: 'Germany', currency: 'EUR' },
+  'fr-FR': { country: 'France', currency: 'EUR' },
+  'it-IT': { country: 'Italy', currency: 'EUR' },
+  'es-ES': { country: 'Spain', currency: 'EUR' },
+  'pt-PT': { country: 'Portugal', currency: 'EUR' },
+  'nl-NL': { country: 'Netherlands', currency: 'EUR' },
+  'ru-RU': { country: 'Russia', currency: 'RUB' },
+  'ja-JP': { country: 'Japan', currency: 'JPY' },
+  'zh-CN': { country: 'China', currency: 'CNY' },
+  'ko-KR': { country: 'South Korea', currency: 'KRW' },
+  'ar-SA': { country: 'Saudi Arabia', currency: 'SAR' },
+  'zh-TW': { country: 'Taiwan', currency: 'TWD' },
+  'tr-TR': { country: 'Turkey', currency: 'TRY' },
+  'pl-PL': { country: 'Poland', currency: 'PLN' },
+  'no-NO': { country: 'Norway', currency: 'NOK' },
+  'sv-SE': { country: 'Sweden', currency: 'SEK' },
+  'fi-FI': { country: 'Finland', currency: 'EUR' },
+  'da-DK': { country: 'Denmark', currency: 'DKK' },
+  'cs-CZ': { country: 'Czech Republic', currency: 'CZK' },
+  'sk-SK': { country: 'Slovakia', currency: 'EUR' },
+  'hu-HU': { country: 'Hungary', currency: 'HUF' },
+  'ro-RO': { country: 'Romania', currency: 'RON' },
+  'bg-BG': { country: 'Bulgaria', currency: 'BGN' },
+  'hr-HR': { country: 'Croatia', currency: 'HRK' },
+  'sr-RS': { country: 'Serbia', currency: 'RSD' },
+  'ua-UA': { country: 'Ukraine', currency: 'UAH' },
+  'lt-LT': { country: 'Lithuania', currency: 'EUR' },
+  'lv-LV': { country: 'Latvia', currency: 'EUR' },
+  'ee-EE': { country: 'Estonia', currency: 'EUR' },
+  'is-IS': { country: 'Iceland', currency: 'ISK' },
+  'mt-MT': { country: 'Malta', currency: 'EUR' },
+  'mk-MK': { country: 'Macedonia', currency: 'MKD' },
+  'si-LK': { country: 'Sri Lanka', currency: 'LKR' },
+  'bn-BD': { country: 'Bangladesh', currency: 'BDT' },
+  'ne-NP': { country: 'Nepal', currency: 'NPR' },
+  'th-TH': { country: 'Thailand', currency: 'THB' },
+  'vi-VN': { country: 'Vietnam', currency: 'VND' },
+  'my-MY': { country: 'Malaysia', currency: 'MYR' },
+  'ph-PH': { country: 'Philippines', currency: 'PHP' },
+  'id-ID': { country: 'Indonesia', currency: 'IDR' },
+  'kh-KH': { country: 'Cambodia', currency: 'KHR' },
+  'la-LA': { country: 'Laos', currency: 'LAK' },
+  'mm-MM': { country: 'Myanmar', currency: 'MMK' },
+  'mn-MN': { country: 'Mongolia', currency: 'MNT' },
+  'uz-UZ': { country: 'Uzbekistan', currency: 'UZS' },
+  'kz-KZ': { country: 'Kazakhstan', currency: 'KZT' },
+  'ge-GE': { country: 'Georgia', currency: 'GEL' },
+  'az-AZ': { country: 'Azerbaijan', currency: 'AZN' },
+  'am-AM': { country: 'Armenia', currency: 'AMD' },
+  'tn-TN': { country: 'Tunisia', currency: 'TND' },
+  'eg-EG': { country: 'Egypt', currency: 'EGP' },
+  'ma-MA': { country: 'Morocco', currency: 'MAD' },
+  'dz-DZ': { country: 'Algeria', currency: 'DZD' },
+  'ly-LY': { country: 'Libya', currency: 'LYD' },
+  'ke-KE': { country: 'Kenya', currency: 'KES' },
+  'ng-NG': { country: 'Nigeria', currency: 'NGN' },
+  'za-ZA': { country: 'South Africa', currency: 'ZAR' },
+  'ae-AE': { country: 'United Arab Emirates', currency: 'AED' },
+  'il-IL': { country: 'Israel', currency: 'ILS' },
+  'cl-CL': { country: 'Chile', currency: 'CLP' },
+  'pe-PE': { country: 'Peru', currency: 'PEN' },
+  'co-CO': { country: 'Colombia', currency: 'COP' },
+  'ar-AR': { country: 'Argentina', currency: 'ARS' },
+  'mx-MX': { country: 'Mexico', currency: 'MXN' },
+  'ec-EC': { country: 'Ecuador', currency: 'USD' },
+  'bo-BO': { country: 'Bolivia', currency: 'BOB' },
+  'py-PY': { country: 'Paraguay', currency: 'PYG' },
+  'do-DO': { country: 'Dominican Republic', currency: 'DOP' },
+  'cr-CR': { country: 'Costa Rica', currency: 'CRC' },
+  'pa-PA': { country: 'Panama', currency: 'PAB' },
+  'sv-SV': { country: 'El Salvador', currency: 'SVC' },
+  'gt-GT': { country: 'Guatemala', currency: 'GTQ' },
+  'hn-HN': { country: 'Honduras', currency: 'HNL' },
+  'ni-NI': { country: 'Nicaragua', currency: 'NIO' },
+  'cu-CU': { country: 'Cuba', currency: 'CUP' },
+  'jm-JM': { country: 'Jamaica', currency: 'JMD' },
+  'tt-TT': { country: 'Trinidad and Tobago', currency: 'TTD' },
+  'bz-BZ': { country: 'Belize', currency: 'BZD' },
+  'ht-HT': { country: 'Haiti', currency: 'HTG' },
+  'ws-WS': { country: 'Samoa', currency: 'WST' },
+  'tv-TV': { country: 'Tuvalu', currency: 'AUD' },
+  'pf-PF': { country: 'French Polynesia', currency: 'XPF' },
+  'wf-WF': { country: 'Wallis and Futuna', currency: 'XPF' },
+  'en-IN': { country: 'India', currency: 'INR' },
+};

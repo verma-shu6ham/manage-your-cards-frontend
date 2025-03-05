@@ -1,48 +1,166 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signup } from "../../services/api";
-
-import "./Auth.css"
+import { localeCurrencyMap } from "../../constants/localeAndSymbol";
+import "./Auth.css";
 
 function Signup() {
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
-  const navigate = useNavigate()
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [locale, setLocale] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  const [countryDropdown, setCountryDropdown] = useState(false);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [passwordMismatch, setPasswordMismatch] = useState(true);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleName = (e) => {
+    setName(e.target.value);
+  };
+
+  const handleEmail = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePassword = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleConfirmPassword = (e) => {
+    setConfirmPassword(e.target.value);
+  };
+
+  useEffect(() => {
+    if (password === confirmPassword) {
+      setPasswordMismatch(false);
+    } else {
+      setPasswordMismatch(true);
+    }
+  }, [password, confirmPassword]);
+
+  const handleSelectChange = (locale) => {
+    setInputValue(`${localeCurrencyMap[locale].country} (${localeCurrencyMap[locale].currency})`)
+    setLocale(locale);
+    setCountryDropdown(false)
+  };
+
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+    setLocale(e.target.value);
+  };
+
+  const filteredOptions = Object.entries(localeCurrencyMap).filter(
+    ([loc, { country }]) =>
+      country.toLowerCase().includes(inputValue.toLowerCase())
+  );
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      await signup(name, email, password)
-      navigate("/")
+      await signup(name, email, locale, password);
+      navigate("/");
     } catch (err) {
-      setError(err.message)
+      setError(err.message);
     }
-  }
+  };
+
+  const handleClickOutside = (e) => {
+    if (!e.target.closest(".country-dropdown")) {
+      setCountryDropdown(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="auth-container">
       <h2>Sign Up</h2>
+      {error && <p className="error">{error}</p>}
       <form onSubmit={handleSubmit} className="auth-form">
-        <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        {error && <p className="error">{error}</p>}
+        <span className="label-input">
+          <label htmlFor="name">Full Name</label>
+          <input type="text" placeholder="Name" value={name} onChange={handleName} required />
+        </span>
+        <span className="label-input">
+          <label htmlFor="email">Email</label>
+          <input type="email" placeholder="Email" value={email} onChange={handleEmail} required />
+        </span>
+        <span className="label-input country-dropdown">
+          <label htmlFor="country">Country</label>
+          <input
+            type="text"
+            value={inputValue}
+            onChange={handleInputChange}
+            placeholder="Type country or select country"
+            onFocus={() => setCountryDropdown(true)}
+          />
+          <button
+            className="country-dropdown-icon"
+            type="button"
+            onClick={() => setCountryDropdown((prev) => !prev)}
+          >
+            {countryDropdown ? "▲" : "▼"}
+          </button>
+          {countryDropdown && (
+            <ul
+              className="country-dropdown-list"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {filteredOptions.length > 0 ? (
+                filteredOptions.map(([loc, { country, currency }]) => (
+                  <li key={loc} onClick={() => handleSelectChange(loc)}>
+                    {country} ({currency})
+                  </li>
+                ))
+              ) : (
+                <li>No matching results</li>
+              )}
+            </ul>
+          )}
+        </span>
+        <span className="label-input">
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={handlePassword}
+            required
+          />
+        </span>
+        <span className="label-input">
+          <label htmlFor="confirmPassword">Confirm Password</label>
+          <input
+            className={`label-input ${passwordMismatch ? "mismatch" : ""}`}
+            type={showPassword ? "text" : "password"}
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={handleConfirmPassword}
+            required
+          />
+          <button
+            className="show-password"
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+          >
+            {showPassword ? `Hide` : "Show"}
+          </button>
+        </span>
         <button type="submit">Sign Up</button>
       </form>
       <p>
         Already have an account? <Link to="/login">Log in</Link>
       </p>
     </div>
-  )
+  );
 }
 
-export default Signup
-
+export default Signup;

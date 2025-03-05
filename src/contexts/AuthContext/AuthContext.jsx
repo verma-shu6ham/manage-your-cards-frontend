@@ -10,7 +10,7 @@ export function useAuth() {
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [locale, setLocale] = useState('en-IN');
+  const [locale, setLocale] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem("token");
