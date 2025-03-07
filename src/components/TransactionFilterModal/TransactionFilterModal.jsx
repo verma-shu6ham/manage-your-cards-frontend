@@ -15,7 +15,7 @@ function TransactionFilterModal({ isOpen, onClose, onApplyFilters, monthlyExpens
     minAmount: currentFilters?.minAmount || "",
     maxAmount: currentFilters?.maxAmount || "",
     status: currentFilters?.status || "",
-    paymentMethod: currentFilters?.paymentMethod || ""
+    paymentMethod: ""
   });
 
   useEffect(() => {
