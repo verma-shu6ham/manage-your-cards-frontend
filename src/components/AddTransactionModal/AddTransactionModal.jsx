@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getAllCards, getUserCategories, createTransaction } from "../../services/api.js";
+import { getAllCards, getUserCategories, createTransaction, createCashTransaction } from "../../services/api.js";
 import { onlyPositiveValue } from "../../utils/mathUtils.js";
 import { formatDateTime } from '../../utils/mathUtils';
 import { useAuth } from "../../contexts/AuthContext/AuthContext.jsx";
@@ -20,6 +20,8 @@ const AddTransactionModal = ({ isOpen, onClose, preselectedCardId, onTransaction
     const [error, setError] = useState("");
     const [transactionDateOnly, setTransactionDateOnly] = useState(new Date().toISOString().split('T')[0]);
     const [transactionTime, setTransactionTime] = useState(new Date().toISOString().split('T')[1]);
+    const [isCash, setIsCash] = useState(false)
+    const [paymentMethod, setPaymentMethod] = useState("")
 
     useEffect(() => {
         if (isOpen) {
@@ -50,20 +52,31 @@ const AddTransactionModal = ({ isOpen, onClose, preselectedCardId, onTransaction
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!cardId || !amount || !category || !transactionDate) {
+        if ((!isCash && !cardId) || !amount || !category || !transactionDate) {
             setError("Please fill in all required fields.");
             return;
         }
         try {
-            await createTransaction({
-                cardId,
-                amount: Number.parseFloat(amount),
-                type,
-                category,
-                subcategory,
-                description,
-                transactionDate,
-            });
+            if (!isCash) {
+                await createTransaction({
+                    cardId,
+                    amount: Number.parseFloat(amount),
+                    type,
+                    category,
+                    subcategory,
+                    description,
+                    transactionDate,
+                });
+            } else {
+                await createCashTransaction({
+                    amount: Number.parseFloat(amount),
+                    category,
+                    subcategory,
+                    description,
+                    transactionDate,
+                })
+            }
+
             onTransactionAdded?.();
             resetForm();
             onClose();
@@ -71,6 +84,25 @@ const AddTransactionModal = ({ isOpen, onClose, preselectedCardId, onTransaction
             setError(err.message);
         }
     };
+    const handlePaymentMethod = (e) => {
+        const method = e.target.value;
+        if (method === 'cash') {
+            setIsCash(true)
+            setPaymentMethod('cash')
+        } else {
+            setCardId(method)
+            setPaymentMethod(method)
+            setIsCash(false)
+        }
+    }
+
+    useEffect(() => {
+        if (isCash) {
+            setCategory("Monthly Expense")
+        } else {
+            setCategory("")
+        }
+    }, [isCash])
 
     const handleDateChange = (e) => {
         const newDate = e.target.value;
@@ -105,22 +137,23 @@ const AddTransactionModal = ({ isOpen, onClose, preselectedCardId, onTransaction
 
                 <form onSubmit={handleSubmit} className="add-transaction-form">
                     <div className="form-group">
-                        <label htmlFor="card">Card</label>
+                        <label htmlFor="paymentMethod">Payment Method</label>
                         {preselectedCardId ? (
                             <input
-                                id="card"
+                                id="paymentMethod"
                                 type="text"
                                 value={cards.find(card => card._id === preselectedCardId)?.cardName || 'Loading...'}
                                 disabled
                             />
                         ) : (
                             <select
-                                id="card"
-                                value={cardId}
-                                onChange={(e) => setCardId(e.target.value)}
+                                id="paymentMethod"
+                                value={paymentMethod}
+                                onChange={handlePaymentMethod}
                                 required
                             >
-                                <option value="">Select a card</option>
+                                <option value="">Select a payment method</option>
+                                <option value="cash">Cash</option>
                                 {cards.map((card) => (
                                     <option key={card._id} value={card._id}>
                                         {card.cardName}
@@ -148,7 +181,8 @@ const AddTransactionModal = ({ isOpen, onClose, preselectedCardId, onTransaction
                             id="type"
                             value={type}
                             onChange={(e) => setType(e.target.value)}
-                            required
+                            required={!isCash}
+                            disabled={isCash}
                         >
                             <option value="debit">Debit</option>
                             <option value="credit">Credit</option>
@@ -161,9 +195,10 @@ const AddTransactionModal = ({ isOpen, onClose, preselectedCardId, onTransaction
                             id="category"
                             value={category}
                             onChange={(e) => setCategory(e.target.value)}
-                            required
+                            required={!isCash}
+                            disabled={isCash}
                         >
-                            <option value="">Select a category</option>
+                            {isCash ? <option value="Monthly Expense">Monthly Expense</option> : <option value="">Select a category</option>}
                             {categories.map((cat) => (
                                 <option key={cat.category} value={cat.category}>
                                     {cat.category}

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { getAllCards, getUserCategories } from "../../services/api";
 import "./TransactionFilterModal.css";
 
-function TransactionFilterModal({ isOpen, onClose, onApplyFilters, currentFilters }) {
+function TransactionFilterModal({ isOpen, onClose, onApplyFilters, monthlyExpenseTx = false, currentFilters }) {
   const [cards, setCards] = useState([]);
   const [categories, setCategories] = useState([]);
   const [filters, setFilters] = useState({
@@ -14,7 +14,8 @@ function TransactionFilterModal({ isOpen, onClose, onApplyFilters, currentFilter
     endDate: currentFilters?.endDate || "",
     minAmount: currentFilters?.minAmount || "",
     maxAmount: currentFilters?.maxAmount || "",
-    status: currentFilters?.status || ""
+    status: currentFilters?.status || "",
+    paymentMethod: currentFilters?.paymentMethod || ""
   });
 
   useEffect(() => {
@@ -33,6 +34,17 @@ function TransactionFilterModal({ isOpen, onClose, onApplyFilters, currentFilter
     fetchData();
   }, []);
 
+  useEffect(() => {
+    console.log(currentFilters)
+    if (monthlyExpenseTx) {
+      setFilters(prev => ({
+        ...prev,
+        category: currentFilters.category,
+        subcategory: currentFilters.subcategory ?? ""
+      }));
+    }
+  }, [categories])
+
   const handleCardSelection = (cardId) => {
     setFilters(prev => ({
       ...prev,
@@ -46,7 +58,14 @@ function TransactionFilterModal({ isOpen, onClose, onApplyFilters, currentFilter
     setFilters(prev => ({
       ...prev,
       category: e.target.value,
-      subcategory: "" // Reset subcategory when category changes
+      subcategory: ""
+    }));
+  };
+
+  const handleCashPayments = (method) => {
+    setFilters(prev => ({
+      ...prev,
+      paymentMethod: filters.paymentMethod ? "" : method,
     }));
   };
 
@@ -74,6 +93,14 @@ function TransactionFilterModal({ isOpen, onClose, onApplyFilters, currentFilter
           <div className="filter-section">
             <h3>Select Cards</h3>
             <div className="cards-grid">
+              {monthlyExpenseTx && <label key="cash" className="card-checkbox">
+                <input
+                  type="checkbox"
+                  checked={filters.paymentMethod}
+                  onChange={() => handleCashPayments("cash")}
+                />
+                <span>Cash</span>
+              </label>}
               {cards.map(card => (
                 <label key={card._id} className="card-checkbox">
                   <input
@@ -106,9 +133,10 @@ function TransactionFilterModal({ isOpen, onClose, onApplyFilters, currentFilter
                 value={filters.category}
                 onChange={handleCategoryChange}
                 className="category-select"
+                disabled={monthlyExpenseTx}
               >
-                <option value="">All Categories</option>
-                {categories.map(cat => (
+                {!monthlyExpenseTx && <option value="">All Categories</option>}
+                {monthlyExpenseTx ? <option value="">Monthly Expense</option> : categories.map(cat => (
                   <option key={cat.category} value={cat.category}>
                     {cat.category}
                   </option>
@@ -181,18 +209,18 @@ function TransactionFilterModal({ isOpen, onClose, onApplyFilters, currentFilter
               <option value="reversed">Reversed</option>
             </select>
           </div>
-
           <div className="modal-footer">
             <button type="button" className="reset-button" onClick={() => setFilters({
               cardIds: [],
               type: "",
-              category: "",
+              category: monthlyExpenseTx ? currentFilters.category : "",
               subcategory: "",
               startDate: "",
               endDate: "",
               minAmount: "",
               maxAmount: "",
-              status: ""
+              status: "",
+              paymentMethod: monthlyExpenseTx ? "" : currentFilters.paymentMethod,
             })}>
               Reset
             </button>

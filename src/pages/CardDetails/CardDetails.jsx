@@ -211,20 +211,20 @@ function CardDetails() {
         )}
       </div>
 
-      <AddTransactionModal
+      {isTransactionModalOpen && <AddTransactionModal
         isOpen={isTransactionModalOpen}
         onClose={() => setIsTransactionModalOpen(false)}
         preselectedCardId={id}
         onTransactionAdded={fetchCardDetailsData}
-      />
+      />}
 
 
-      <UpdateBalanceModal
+      {isUpdateModalOpen && <UpdateBalanceModal
         cardId={id}
         isOpen={isUpdateModalOpen}
         onClose={() => setIsUpdateModalOpen(false)}
         onFetchCardDetailsData={fetchCardDetailsData}
-      />
+      />}
 
       {isEditModalOpen && <EditTransactionModal
         isOpen={isEditModalOpen}

@@ -9,6 +9,7 @@ import Home from './pages/Home/Home';
 import CardDetails from './pages/CardDetails/CardDetails';
 import Transactions from './pages/Transactions/Transactions';
 import Profile from './pages/Profile/Profile';
+import MonthlyExpense from './pages/MonthlyExpense/MonthlyExpense';
 import { ThemeProvider } from './contexts/ThemeContext/ThemeContext';
 import { TooltipContext } from './contexts/TooltipContext';
 import './App.css';
@@ -35,6 +36,7 @@ function App() {
                   <Route path="/" element={<PrivateRoute element={<Home />} />} />
                   <Route path="/card/:id" element={<PrivateRoute element={<CardDetails />} />} />
                   <Route path="/transactions" element={<PrivateRoute element={<Transactions />} />} />
+                  <Route path="/monthlyExpenseTxs" element={<PrivateRoute element={<MonthlyExpense />} />} />
                   <Route path="/profile" element={<PrivateRoute element={<Profile />} />} />
 
                   {/* Default redirect */}

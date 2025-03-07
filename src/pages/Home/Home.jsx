@@ -219,16 +219,17 @@ function Home() {
         </div>
       </div>
 
-      <AddCardModal
+      {isAddCardModalOpen && <AddCardModal
         isOpen={isAddCardModalOpen}
         onClose={() => setIsAddCardModalOpen(false)}
         onCardAdded={fetchCards}
-      />
-      <AddTransactionModal
+      />}
+      
+      {isTransactionModalOpen  && <AddTransactionModal
         isOpen={isTransactionModalOpen}
         onClose={() => setIsTransactionModalOpen(false)}
         onTransactionAdded={fetchCards}
-      />
+      />}
     </div>
   )
 }

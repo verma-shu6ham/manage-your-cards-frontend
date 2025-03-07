@@ -109,6 +109,15 @@ export const createTransaction = async (transactionData) => {
   }
 }
 
+export const createCashTransaction = async (transactionData) => {
+  try {
+    const response = await api.post("/transactions/cash", transactionData)
+    return response.data
+  } catch (err) {
+    throw new Error("Failed to create cash transaction. Please try again.")
+  }
+}
+
 export const getTransactions = async (filters = {}) => {
   try {
     const response = await api.get("/transactions", { params: filters })

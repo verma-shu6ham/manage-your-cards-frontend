@@ -11,16 +11,17 @@ import TransactionFilterModal from "../../components/TransactionFilterModal/Tran
 import TransactionOptionsMenu from "../../components/TransactionOptionsMenu/TransactionOptionsMenu";
 import EditTransactionModal from "../../components/EditTransactionModal/EditTransactionModal";
 
-import "./Transactions.css";
+import "./MonthlyExpense.css";
 
-function Transactions() {
+function MonthlyExpense() {
   const { user, locale } = useAuth();
   const navigate = useNavigate();
+  
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
-  const [currentFilters, setCurrentFilters] = useState({ paymentMethod: "credit_card"});
+  const [currentFilters, setCurrentFilters] = useState({category: "Monthly Expense"});
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -36,9 +37,7 @@ function Transactions() {
   const fetchTransactionData = async (filters = {}) => {
     setLoading(true);
     try {
-      console.log(filters)
       const fetchedTransactions = await getTransactions(filters);
-      console.log(fetchedTransactions)
       setTransactions(fetchedTransactions);
     } catch (error) {
       setError("Error fetching transactions");
@@ -86,7 +85,7 @@ function Transactions() {
     <div className="transactions-container">
       <main className="transactions-content">
         <div className="transactions-header">
-          <h1 className="page-title">Transactions</h1>
+          <h1 className="page-title">Monthly Expense Transactions</h1>
           <button
             className="filter-button"
             onClick={() => setIsFilterModalOpen(true)}
@@ -102,7 +101,7 @@ function Transactions() {
             <table className="transactions-table">
               <thead>
                 <tr>
-                  <th>BANK - Card</th>
+                  <th>Cash / Card</th>
                   <th>Date</th>
                   <th>Time</th>
                   <th>Amount</th>
@@ -117,7 +116,7 @@ function Transactions() {
                   const { date, time } = formatDateTime(locale, transaction.transactionDate);
                   return (
                     <tr key={transaction._id}>
-                      <td>{`${transaction.card.cardName} - ${transaction.card.lastFourDigits}`}</td>
+                      {transaction?.card?.cardName ? <td>{`${transaction.card.cardName} - ${transaction.card.lastFourDigits}`}</td> : <td>Cash</td>}
                       <td className="date-cell">{date}</td>
                       <td className="time-cell">{time}</td>
                       <td className={`transaction-amount ${transaction.type === 'debit' ? 'debit' : 'credit'}`}>
@@ -176,6 +175,7 @@ function Transactions() {
           isOpen={isFilterModalOpen}
           onClose={() => setIsFilterModalOpen(false)}
           onApplyFilters={handleApplyFilters}
+          monthlyExpenseTx={true}
           currentFilters={currentFilters}
         />}
 
@@ -193,5 +193,5 @@ function Transactions() {
   );
 }
 
-export default Transactions;
+export default MonthlyExpense;
 
