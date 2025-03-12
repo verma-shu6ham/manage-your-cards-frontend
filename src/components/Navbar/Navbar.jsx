@@ -52,7 +52,7 @@ const Navbar = () => {
     <>
       <div className="navbar-wrapper">
         <div className="navbar-container">
-          <Link to={user ? "/" : "/"} className="navbar-brand">CreditSetu</Link>
+          <Link to={user ? "/dashboard" : "/dashboard"} className="navbar-brand">CreditSetu</Link>
 
           {/* Desktop Navigation */}
           <div className="navbar-desktop-nav">

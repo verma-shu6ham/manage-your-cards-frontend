@@ -24,7 +24,7 @@ function Login() {
         setUser({token: data.token, ...data.user})
         localStorage.setItem('locale', data.user.locale)
         setLocale(data.user.locale)
-        navigate("/")
+        navigate("/dashboard")
       }
     } catch (err) {
       setError(err.message || "Failed to log in. Please check your credentials.")

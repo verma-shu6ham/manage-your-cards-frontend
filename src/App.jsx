@@ -10,6 +10,9 @@ import CardDetails from './pages/CardDetails/CardDetails';
 import Transactions from './pages/Transactions/Transactions';
 import Profile from './pages/Profile/Profile';
 import MonthlyExpense from './pages/MonthlyExpense/MonthlyExpense';
+import PWAInstallPrompt from './components/PWAInstallPrompt/PWAInstallPrompt';
+import OfflineAlert from './components/OfflineAlert/OfflineAlert';
+import UpdateAlert from './components/UpdateAlert/UpdateAlert';
 import { ThemeProvider } from './contexts/ThemeContext/ThemeContext';
 import { TooltipContext } from './contexts/TooltipContext';
 import './App.css';
@@ -33,16 +36,22 @@ function App() {
                   <Route path="/signup" element={<Signup />} />
 
                   {/* Protected Routes */}
-                  <Route path="/" element={<PrivateRoute element={<Home />} />} />
+                  <Route path="/dashboard" element={<PrivateRoute element={<Home />} />} />
                   <Route path="/card/:id" element={<PrivateRoute element={<CardDetails />} />} />
                   <Route path="/transactions" element={<PrivateRoute element={<Transactions />} />} />
                   <Route path="/monthlyExpenseTxs" element={<PrivateRoute element={<MonthlyExpense />} />} />
                   <Route path="/profile" element={<PrivateRoute element={<Profile />} />} />
 
                   {/* Default redirect */}
-                  <Route path="/" element={<Navigate to="/" />} />
+                  <Route path="*" element={<Navigate to="/dashboard" />} />
                 </Routes>
               </main>
+              {/* PWA Install Prompt */}
+              <PWAInstallPrompt />
+              {/* Offline Alert */}
+              <OfflineAlert />
+              {/* Update Alert */}
+              <UpdateAlert />
             </div>
           </Router>
           {showTooltip && (

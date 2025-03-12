@@ -1,0 +1,114 @@
+.update-alert {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 12px;
+  overflow: hidden;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%) translateX(-50%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) translateX(-50%);
+    opacity: 1;
+  }
+}
+
+.update-alert-content {
+  background-color: var(--card-background);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px var(--shadow-color);
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.update-alert-icon {
+  color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%;
+  background-color: var(--background-color);
+}
+
+.update-alert-message {
+  flex-grow: 1;
+}
+
+.update-alert-message strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--text-color);
+}
+
+.update-alert-message p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.update-alert-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.update-alert-update-btn {
+  background: linear-gradient(135deg, var(--primary-color), var(--info-color));
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+}
+
+.update-alert-update-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.update-alert-close {
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.update-alert-close:hover {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+/* Media query for smaller screens */
+@media (max-width: 480px) {
+  .update-alert {
+    top: 10px;
+    width: 95%;
+  }
+  
+  .update-alert-content {
+    padding: 12px;
+  }
+  
+  .update-alert-message p {
+    font-size: 13px;
+  }
+}

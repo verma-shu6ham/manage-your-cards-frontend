@@ -61,7 +61,7 @@ function Signup() {
     e.preventDefault();
     try {
       await signup(name, email, locale, password);
-      navigate("/");
+      navigate("/dashboard");
     } catch (err) {
       setError(err.message);
     }
