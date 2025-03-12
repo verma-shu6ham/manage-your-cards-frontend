@@ -21,7 +21,7 @@ function Login() {
       const data = await login(email, password)
       if (data && data.user) {
         localStorage.setItem('token', data.token)
-        setUser(data.user)
+        setUser({token: data.token, ...data.user})
         localStorage.setItem('locale', data.user.locale)
         setLocale(data.user.locale)
         navigate("/")
