@@ -1,8 +1,11 @@
 // This is the service worker for CreditSetu PWA
 
 const CACHE_NAME = 'creditsetu-v1';
+const DYNAMIC_CACHE = 'creditsetu-dynamic-v1';
+
+// Static assets to cache
 const urlsToCache = [
-  '/',
+  '/dashboard',
   '/index.html',
   '/static/js/main.chunk.js',
   '/static/js/0.chunk.js',
@@ -12,6 +15,18 @@ const urlsToCache = [
   '/logo192.png',
   '/logo512.png'
 ];
+
+// API endpoints that should never be cached
+const API_ENDPOINTS = [
+  '/api/cards',
+  '/api/transactions',
+  '/api/user'
+];
+
+// Check if a request is for an API endpoint
+const isApiRequest = (url) => {
+  return API_ENDPOINTS.some(endpoint => url.includes(endpoint));
+};
 
 // Install a service worker
 self.addEventListener('install', event => {
@@ -24,12 +39,43 @@ self.addEventListener('install', event => {
   );
 });
 
-// Cache and return requests
+// Cache and return requests with network-first strategy for API calls
 self.addEventListener('fetch', event => {
+  // For API requests, use network-first strategy
+  if (isApiRequest(event.request.url)) {
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          // Only cache successful responses
+          if (!response || response.status !== 200) {
+            return response;
+          }
+
+          // Clone the response before using it
+          const responseToCache = response.clone();
+          
+          // Store the latest API response in dynamic cache
+          caches.open(DYNAMIC_CACHE).then(cache => {
+            // Delete old cached version before storing new one
+            cache.delete(event.request).then(() => {
+              cache.put(event.request, responseToCache);
+            });
+          });
+          
+          return response;
+        })
+        .catch(() => {
+          // If offline, try to return cached response
+          return caches.match(event.request);
+        })
+    );
+    return;
+  }
+
+  // For non-API requests, use cache-first strategy
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        // Cache hit - return response
         if (response) {
           return response;
         }
@@ -40,9 +86,7 @@ self.addEventListener('fetch', event => {
               return response;
             }
 
-            // Clone the response
             const responseToCache = response.clone();
-
             caches.open(CACHE_NAME)
               .then(cache => {
                 cache.put(event.request, responseToCache);
@@ -54,14 +98,15 @@ self.addEventListener('fetch', event => {
   );
 });
 
-// Update a service worker
+// Update a service worker and clean old caches
 self.addEventListener('activate', event => {
-  const cacheWhitelist = [CACHE_NAME];
+  const cacheWhitelist = [CACHE_NAME, DYNAMIC_CACHE];
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheWhitelist.indexOf(cacheName) === -1) {
+            // Delete old cache versions
             return caches.delete(cacheName);
           }
         })
