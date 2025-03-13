@@ -40,7 +40,7 @@ function MonthlyExpense() {
     setLoading(true);
     try {
       const fetchedTransactions = await getTransactions(filters);
-      setTransactions(fetchedTransactions);
+      setTransactions(fetchedTransactions.transactions);
     } catch (error) {
       const formattedError = formatError(error);
       setError(formattedError.message);

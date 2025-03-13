@@ -40,8 +40,7 @@ function Transactions() {
     try {
       console.log(filters)
       const fetchedTransactions = await getTransactions(filters);
-      console.log(fetchedTransactions)
-      setTransactions(fetchedTransactions);
+      setTransactions(fetchedTransactions.transactions);
     } catch (error) {
       const formattedError = formatError(error);
       setError(formattedError.message);

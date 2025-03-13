@@ -9,6 +9,8 @@ import { localeCurrencyMap } from "../../constants/localeAndSymbol"
 import { formatError } from "../../utils/errorHandler"
 import { withErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary'
 
+import './Profile.css';
+
 function Profile() {
   const { logout, locale, setLocale } = useAuth()
   const navigate = useNavigate()
