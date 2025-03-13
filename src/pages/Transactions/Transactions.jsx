@@ -10,6 +10,8 @@ import TransactionCharts from "../../components/TransactionCharts/TransactionCha
 import TransactionFilterModal from "../../components/TransactionFilterModal/TransactionFilterModal";
 import TransactionOptionsMenu from "../../components/TransactionOptionsMenu/TransactionOptionsMenu";
 import EditTransactionModal from "../../components/EditTransactionModal/EditTransactionModal";
+import { formatError } from '../../utils/errorHandler';
+import { withErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary'
 
 import "./Transactions.css";
 
@@ -41,7 +43,8 @@ function Transactions() {
       console.log(fetchedTransactions)
       setTransactions(fetchedTransactions);
     } catch (error) {
-      setError("Error fetching transactions");
+      const formattedError = formatError(error);
+      setError(formattedError.message);
     } finally {
       setLoading(false);
     }
@@ -57,7 +60,8 @@ function Transactions() {
         await deleteTransaction(transactionId);
         fetchTransactionData(currentFilters); // Refresh the data
       } catch (err) {
-        setError(err.message);
+        const formattedError = formatError(err);
+        setError(formattedError.message);
       }
     }
   };
@@ -193,5 +197,4 @@ function Transactions() {
   );
 }
 
-export default Transactions;
-
+export default withErrorBoundary(Transactions);

@@ -18,6 +18,8 @@ import { formatNumber } from '../../utils/mathUtils';
 import { useAuth } from '../../contexts/AuthContext/AuthContext';
 import './TransactionCharts.css';
 import PropTypes from 'prop-types';
+import { formatError } from '../../utils/errorHandler';
+import { withErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
 
 ChartJS.register(
   CategoryScale,
@@ -70,7 +72,8 @@ const TransactionCharts = ({ filters }) => {
       setMonthlySpending(monthly.monthlySummary);
       setSpendingSummary(summary);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      const formattedError = formatError(error);
+      console.error('Error fetching data:', formattedError.message);
     } finally {
       setLoading(false);
     }
@@ -290,4 +293,4 @@ TransactionCharts.defaultProps = {
   filters: {}
 };
 
-export default TransactionCharts;
+export default withErrorBoundary(TransactionCharts);

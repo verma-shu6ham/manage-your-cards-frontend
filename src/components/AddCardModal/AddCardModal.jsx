@@ -4,6 +4,8 @@ import { faTimes, faCreditCard } from '@fortawesome/free-solid-svg-icons';
 import { addCreditCard } from '../../services/api';
 import './AddCardModal.css';
 import { formatDateTime } from '../../utils/mathUtils';
+import { formatError } from '../../utils/errorHandler';
+import { withErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
 
 const AddCardModal = ({ isOpen, onClose, onCardAdded }) => {
   const [formData, setFormData] = useState({
@@ -51,7 +53,8 @@ const AddCardModal = ({ isOpen, onClose, onCardAdded }) => {
         currentPaymentDate: '',
       });
     } catch (err) {
-      setError(err.message || 'Failed to add card');
+      const formattedError = formatError(err);
+      setError(formattedError.message);
     } finally {
       setLoading(false);
     }
@@ -170,4 +173,4 @@ const AddCardModal = ({ isOpen, onClose, onCardAdded }) => {
   );
 };
 
-export default AddCardModal; 
+export default withErrorBoundary(AddCardModal); 

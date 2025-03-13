@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { signup } from "../../services/api";
 import { localeCurrencyMap } from "../../constants/localeAndSymbol";
 import "./Auth.css";
+import { formatError } from '../../utils/errorHandler';
+import { withErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary'
 
 function Signup() {
   const [name, setName] = useState("");
@@ -63,7 +65,8 @@ function Signup() {
       await signup(name, email, locale, password);
       navigate("/dashboard");
     } catch (err) {
-      setError(err.message);
+      const formattedError = formatError(err);
+      setError(formattedError.message);
     }
   };
 
@@ -83,7 +86,9 @@ function Signup() {
   return (
     <div className="auth-container">
       <h2>Sign Up</h2>
+
       {error && <p className="error">{error}</p>}
+      
       <form onSubmit={handleSubmit} className="auth-form">
         <span className="label-input">
           <label htmlFor="name">Full Name</label>
@@ -163,4 +168,4 @@ function Signup() {
   );
 }
 
-export default Signup;
+export default withErrorBoundary(Signup);

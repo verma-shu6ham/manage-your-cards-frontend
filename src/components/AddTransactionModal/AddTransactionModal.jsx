@@ -3,6 +3,8 @@ import { getAllCards, getUserCategories, createTransaction, createCashTransactio
 import { onlyPositiveValue } from "../../utils/mathUtils.js";
 import { formatDateTime } from '../../utils/mathUtils';
 import { useAuth } from "../../contexts/AuthContext/AuthContext.jsx";
+import { formatError } from '../../utils/errorHandler';
+import { withErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
 
 import "./AddTransactionModal.css";
 
@@ -37,7 +39,8 @@ const AddTransactionModal = ({ isOpen, onClose, preselectedCardId, onTransaction
             const data = await getAllCards();
             setCards(data);
         } catch (err) {
-            setError("Failed to fetch cards. Please try again.");
+            const formattedError = formatError(err);
+            setError(formattedError.message);
         }
     };
 
@@ -46,14 +49,16 @@ const AddTransactionModal = ({ isOpen, onClose, preselectedCardId, onTransaction
             const data = await getUserCategories();
             setCategories(data.categories);
         } catch (err) {
-            setError("Failed to fetch categories. Please try again.");
+            const formattedError = formatError(err);
+            setError(formattedError.message);
         }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if ((!isCash && !cardId) || !amount || !category || !transactionDate) {
-            setError("Please fill in all required fields.");
+            const formattedError = formatError("Please fill in all required fields.");
+            setError(formattedError.message);
             return;
         }
         try {
@@ -61,11 +66,11 @@ const AddTransactionModal = ({ isOpen, onClose, preselectedCardId, onTransaction
                 await createTransaction({
                     cardId,
                     amount: Number.parseFloat(amount),
-                    type,
-                    category,
-                    subcategory,
-                    description,
-                    transactionDate,
+                type,
+                category,
+                subcategory,
+                description,
+                transactionDate,
                 });
             } else {
                 await createCashTransaction({
@@ -81,9 +86,12 @@ const AddTransactionModal = ({ isOpen, onClose, preselectedCardId, onTransaction
             resetForm();
             onClose();
         } catch (err) {
-            setError(err.message);
+            console.log('err', err);
+            const formattedError = formatError(err);
+            setError(formattedError.message);
         }
     };
+
     const handlePaymentMethod = (e) => {
         const method = e.target.value;
         if (method === 'cash') {
@@ -134,6 +142,8 @@ const AddTransactionModal = ({ isOpen, onClose, preselectedCardId, onTransaction
                     <h2>Add Transaction</h2>
                     <button className="close-button" onClick={onClose}>&times;</button>
                 </div>
+                
+                {error && <p className="error-message">{error}</p>}
 
                 <form onSubmit={handleSubmit} className="add-transaction-form">
                     <div className="form-group">
@@ -261,7 +271,6 @@ const AddTransactionModal = ({ isOpen, onClose, preselectedCardId, onTransaction
                         />
                     </div>
 
-                    {error && <p className="error-message">{error}</p>}
 
                     <div className="modal-footer">
                         <button type="button" className="reset-button" onClick={resetForm}>
@@ -277,4 +286,4 @@ const AddTransactionModal = ({ isOpen, onClose, preselectedCardId, onTransaction
     );
 };
 
-export default AddTransactionModal; 
+export default withErrorBoundary(AddTransactionModal);

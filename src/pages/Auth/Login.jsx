@@ -2,7 +2,9 @@ import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { login } from "../../services/api"
 import { useAuth } from "../../contexts/AuthContext/AuthContext"
-import "./Auth.css";
+import "./Auth.css"
+import { formatError } from '../../utils/errorHandler'
+import { withErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary'
 
 function Login() {
   const [email, setEmail] = useState("")
@@ -27,7 +29,8 @@ function Login() {
         navigate("/dashboard")
       }
     } catch (err) {
-      setError(err.message || "Failed to log in. Please check your credentials.")
+      const formattedError = formatError(err);
+      setError(formattedError.message || "Failed to log in. Please check your credentials.")
     } finally {
       setLoading(false)
     }
@@ -36,7 +39,9 @@ function Login() {
   return (
     <div className="auth-container">
       <h2>Welcome Back</h2>
+
       {error && <div className="error">{error}</div>}
+      
       <form onSubmit={handleSubmit} className="auth-form">
         <span className="label-input">
           <label htmlFor="email">Email</label>
@@ -73,5 +78,4 @@ function Login() {
   )
 }
 
-export default Login
-
+export default withErrorBoundary(Login)

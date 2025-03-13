@@ -10,6 +10,8 @@ import AddTransactionModal from "../../components/AddTransactionModal/AddTransac
 import AddCardModal from "../../components/AddCardModal/AddCardModal";
 import { TOOLTIP_MESSAGES } from '../../constants/tooltipMessages';
 import InfoIcon from '../../components/InfoIcon/InfoIcon';
+import { formatError } from '../../utils/errorHandler';
+import { withErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary'
 
 import "./Home.css"
 
@@ -36,7 +38,8 @@ function Home() {
       const data = await getAllCards()
       setCards(data)
     } catch (err) {
-      setError("Failed to fetch cards. Please try again.")
+      const formattedError = formatError(err);
+      setError(formattedError.message)
     } finally {
       setLoading(false)
     }
@@ -234,5 +237,4 @@ function Home() {
   )
 }
 
-export default Home
-
+export default withErrorBoundary(Home)

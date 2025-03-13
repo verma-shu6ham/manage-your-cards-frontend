@@ -5,12 +5,14 @@ import { formatNumber, formatDateTime } from "../../utils/mathUtils.js"
 import Loading from "../../components/Loading/Loading.jsx"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCreditCard, faMoneyBillWave, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons'
-import AddTransactionModal from "../../components/AddTransactionModal/AddTransactionModal";
-import { useAuth } from "../../contexts/AuthContext/AuthContext";
-import { TOOLTIP_MESSAGES } from '../../constants/tooltipMessages';
-import InfoIcon from '../../components/InfoIcon/InfoIcon';
-import UpdateBalanceModal from '../../components/UpdateBalanceModal/UpdateBalanceModal';
-import EditTransactionModal from "../../components/EditTransactionModal/EditTransactionModal.jsx";
+import AddTransactionModal from "../../components/AddTransactionModal/AddTransactionModal"
+import { useAuth } from "../../contexts/AuthContext/AuthContext"
+import { TOOLTIP_MESSAGES } from '../../constants/tooltipMessages'
+import InfoIcon from '../../components/InfoIcon/InfoIcon'
+import UpdateBalanceModal from '../../components/UpdateBalanceModal/UpdateBalanceModal'
+import EditTransactionModal from "../../components/EditTransactionModal/EditTransactionModal.jsx"
+import { formatError } from '../../utils/errorHandler'
+import { withErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary'
 
 import "./CardDetails.css";
 
@@ -35,7 +37,8 @@ function CardDetails() {
       const data = await getBillingSpending({ cardId: id })
       setBillingSpending(data)
     } catch (err) {
-      setError(err.message)
+      const formattedError = formatError(err);
+      setError(formattedError.message)
     }
   }
 
@@ -46,7 +49,8 @@ function CardDetails() {
       fetchBillingSpendingData();
       setLoading(false)
     } catch (err) {
-      setError(err.message)
+      const formattedError = formatError(err);
+      setError(formattedError.message)
       setLoading(false)
     }
   }
@@ -57,7 +61,8 @@ function CardDetails() {
         await deleteTransaction(transactionId);
         fetchCardDetailsData();
       } catch (err) {
-        setError(err.message);
+        const formattedError = formatError(err);
+        setError(formattedError.message);
       }
     }
   };
@@ -239,5 +244,4 @@ function CardDetails() {
   )
 }
 
-export default CardDetails
-
+export default withErrorBoundary(CardDetails)

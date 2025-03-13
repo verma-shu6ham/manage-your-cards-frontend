@@ -18,6 +18,7 @@ import {
   faSignOutAlt
 } from '@fortawesome/free-solid-svg-icons';
 import "./Navbar.css"
+import { withErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -167,4 +168,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default withErrorBoundary(Navbar);

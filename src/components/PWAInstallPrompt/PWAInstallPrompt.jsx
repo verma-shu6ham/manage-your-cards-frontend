@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useTheme } from '../../contexts/ThemeContext/ThemeContext';
+import { withErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
 import './PWAInstallPrompt.css';
 
 const PWAInstallPrompt = () => {
-  const { theme } = useTheme();
   const [showPrompt, setShowPrompt] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
   const [isAndroid, setIsAndroid] = useState(false);
@@ -119,4 +118,4 @@ const PWAInstallPrompt = () => {
   );
 };
 
-export default PWAInstallPrompt;
+export default withErrorBoundary(PWAInstallPrompt);

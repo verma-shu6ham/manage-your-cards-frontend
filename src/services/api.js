@@ -1,4 +1,5 @@
 import axios from "axios"
+import { handleApiError } from '../utils/errorHandler'
 
 const API_URL = `${process.env.REACT_APP_API_URL}/api`
 
@@ -37,7 +38,9 @@ export const login = async (email, password) => {
     const response = await api.post("/auth/login", { email, password })
     return response.data
   } catch (err) {
-    throw new Error(err.response?.data?.message || "Login failed. Please try again.")
+    throw handleApiError(err, {
+      message: "Login failed. Please check your credentials and try again."
+    })
   }
 }
 
@@ -46,7 +49,9 @@ export const signup = async (name, email, locale, password) => {
     const response = await api.post("/auth/signup", { name, email, locale, password })
     return response.data
   } catch (err) {
-    throw new Error(err.response?.data?.message || "Signup failed. Please try again.")
+    throw handleApiError(err, {
+      message: "Signup failed. Please check your details and try again."
+    })
   }
 }
 
@@ -56,7 +61,9 @@ export const addCreditCard = async (cardData) => {
     const response = await api.post("/cards/add-card", cardData)
     return response.data
   } catch (err) {
-    throw new Error("Failed to add credit card. Please try again.")
+    throw handleApiError(err, {
+      message: "Failed to add credit card. Please check your card details and try again."
+    })
   }
 }
 
@@ -65,7 +72,9 @@ export const getAllCards = async () => {
     const response = await api.get("/cards/all-cards")
     return response.data
   } catch (err) {
-    throw new Error("Failed to fetch cards. Please try again.")
+    throw handleApiError(err, {
+      message: "Failed to fetch credit cards. Please try again later."
+    })
   }
 }
 
@@ -74,7 +83,9 @@ export const getCardDetails = async (cardId) => {
     const response = await api.get(`/cards/${cardId}`)
     return response.data
   } catch (err) {
-    throw new Error("Failed to fetch card details. Please try again.")
+    throw handleApiError(err, {
+      message: "Failed to fetch card details. Please try again later."
+    })
   }
 }
 
@@ -85,27 +96,34 @@ export const updateRealTimeAvailableCredit = async (cardId, realTimeAvailableCre
     })
     return response.data
   } catch (err) {
-    throw new Error("Failed to update real-time available credit. Please try again.")
+    throw handleApiError(err, {
+      message: "Failed to update real-time available credit. Please try again later."
+    })
   }
 }
 
 export const deleteCard = async (cardId) => {
   try {
     const response = await api.delete(`/cards/${cardId}`)
-    return response;
+    return response
   } catch (err) {
-    throw new Error("Failed to delete credit card. Please try again.")
+    throw handleApiError(err, {
+      message: "Failed to delete credit card. Please try again later."
+    })
   }
 }
 
-
 // Transaction endpoints
 export const createTransaction = async (transactionData) => {
+  console.log("createTransaction")
   try {
     const response = await api.post("/transactions", transactionData)
     return response.data
   } catch (err) {
-    throw new Error("Failed to create transaction. Please try again.")
+    console.log(err)
+    throw handleApiError(err, {
+      message: "Failed to create transaction. Please check your details and try again."
+    })
   }
 }
 
@@ -114,7 +132,9 @@ export const createCashTransaction = async (transactionData) => {
     const response = await api.post("/transactions/cash", transactionData)
     return response.data
   } catch (err) {
-    throw new Error("Failed to create cash transaction. Please try again.")
+    throw handleApiError(err, {
+      message: "Failed to create cash transaction. Please check your details and try again."
+    })
   }
 }
 
@@ -123,40 +143,35 @@ export const getTransactions = async (filters = {}) => {
     const response = await api.get("/transactions", { params: filters })
     return response.data.transactions
   } catch (err) {
-    throw new Error("Failed to fetch transactions. Please try again.")
+    throw handleApiError(err, {
+      message: "Failed to fetch transactions. Please try again later."
+    })
   }
 }
-
-// export const settleTransaction = async (transactionId, settleAmount) => {
-//   try {
-//     const response = await api.post(`/transactions/${transactionId}/settle`, {
-//       settleAmount
-//     })
-//     return response.data
-//   } catch (err) {
-//     throw new Error("Failed to settle transaction. Please try again.")
-//   }
-// }
 
 export const deleteTransaction = async (transactionId) => {
   try {
     const response = await api.delete(`/transactions/${transactionId}`)
     return response.data
   } catch (err) {
-    throw new Error("Failed to delete transaction. Please try again.")
+    throw handleApiError(err, {
+      message: "Failed to delete transaction. Please try again later."
+    })
   }
 }
 
 export const updateTransaction = async (transactionId, transactionData) => {
   try {
-    const response = await api.patch(`/transactions/${transactionId}`, transactionData);
-    return response.data;
+    const response = await api.patch(`/transactions/${transactionId}`, transactionData)
+    return response.data
   } catch (err) {
-    throw new Error("Failed to update transaction. Please try again.");
+    throw handleApiError(err, {
+      message: "Failed to update transaction. Please check your details and try again."
+    })
   }
-};
+}
 
-
+// Monthly Expense endpoints
 export const getMonthlySpending = async (params) => {
   try {
     const cleanParams = Object.entries(params).reduce((acc, [key, value]) => {
@@ -175,7 +190,9 @@ export const getMonthlySpending = async (params) => {
 
     return response.data;
   } catch (err) {
-    throw new Error("Failed to fetch monthly spending data");
+    throw handleApiError(err, {
+      message: "Failed to fetch monthly spending data. Please try again later."
+    })
   }
 };
 
@@ -194,7 +211,9 @@ export const getBillingSpending = async (params) => {
     });
     return response.data.monthlySummary[0];
   } catch (err) {
-    throw new Error("Failed to fetch billing spending data");
+    throw handleApiError(err, {
+      message: "Failed to fetch billing spending data. Please try again later."
+    })
   }
 };
 
@@ -212,22 +231,11 @@ export const getSpendingSummary = async (params) => {
     });
     return response.data.summary;
   } catch (err) {
-    throw new Error("Failed to fetch spending summary");
+    throw handleApiError(err, {
+      message: "Failed to fetch spending summary. Please try again later."
+    })
   }
 };
-
-
-// Monthly Expense endpoints
-// export const getMonthlyExpenseSummary = async (year, month) => {
-//   try {
-//     const response = await api.get("/expenses/summary", {
-//       params: { year, month }
-//     })
-//     return response.data
-//   } catch (err) {
-//     throw new Error("Failed to fetch monthly expense summary. Please try again.")
-//   }
-// }
 
 // User endpoints
 export const getProfile = async () => {
@@ -235,7 +243,9 @@ export const getProfile = async () => {
     const response = await api.get("/user/profile")
     return response.data
   } catch (err) {
-    throw new Error(err.response?.data?.message || "Failed to fetch profile")
+    throw handleApiError(err, {
+      message: "Failed to fetch profile information. Please try again later."
+    })
   }
 }
 
@@ -244,7 +254,9 @@ export const getUserCategories = async () => {
     const response = await api.get("/user/categories")
     return response.data
   } catch (err) {
-    throw new Error("Failed to fetch categories. Please try again.")
+    throw handleApiError(err, {
+      message: "Failed to fetch categories. Please try again later."
+    })
   }
 }
 
@@ -253,7 +265,9 @@ export const updateLocale = async (locale) => {
     const response = await api.patch("/user/locale", { locale })
     return response.data
   } catch (err) {
-    throw new Error(err.response?.data?.message || "Failed to update country")
+    throw handleApiError(err, {
+      message: "Failed to update country preference. Please try again later."
+    })
   }
 }
 
@@ -262,7 +276,9 @@ export const addCategory = async ({ category, subcategory }) => {
     const response = await api.post("user/categories", { category, subcategory })
     return response.data
   } catch (err) {
-    throw new Error(err.response?.data?.message || "Failed to add category/subcategory")
+    throw handleApiError(err, {
+      message: "Failed to add category/subcategory. Please check your details and try again."
+    })
   }
 }
 
@@ -271,7 +287,9 @@ export const deleteCategory = async (data) => {
     const response = await api.delete("user/categories", { data })
     return response.data
   } catch (err) {
-    throw new Error(err.response?.data?.message || "Failed to delete category/subcategory")
+    throw handleApiError(err, {
+      message: "Failed to delete category/subcategory. Please try again later."
+    })
   }
 }
 
@@ -280,9 +298,10 @@ export const deleteAccount = async () => {
     const response = await api.delete("/users/delete-account")
     return response.data
   } catch (err) {
-    throw new Error(err.response?.data?.message || "Failed to delete account")
+    throw handleApiError(err, {
+      message: "Failed to delete account. Please try again later."
+    })
   }
 }
 
 export default api
-

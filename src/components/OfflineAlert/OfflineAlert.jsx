@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useTheme } from '../../contexts/ThemeContext/ThemeContext';
+import { withErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
 import './OfflineAlert.css';
 
 const OfflineAlert = () => {
-  const { theme } = useTheme();
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
   const [showAlert, setShowAlert] = useState(false);
 
@@ -80,4 +79,4 @@ const OfflineAlert = () => {
   );
 };
 
-export default OfflineAlert;
+export default withErrorBoundary(OfflineAlert);

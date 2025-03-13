@@ -5,6 +5,8 @@ import { updateRealTimeAvailableCredit } from "../../services/api.js"
 import { TOOLTIP_MESSAGES } from '../../constants/tooltipMessages';
 import InfoIcon from '../../components/InfoIcon/InfoIcon';
 import './UpdateBalanceModal.css';
+import { formatError } from '../../utils/errorHandler';
+import { withErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
 
 const UpdateBalanceModal = ({ cardId, isOpen, onClose, onFetchCardDetailsData }) => {
   const [realTimeAvailable, setRealTimeAvailable] = useState("");
@@ -19,7 +21,8 @@ const UpdateBalanceModal = ({ cardId, isOpen, onClose, onFetchCardDetailsData })
     try {
       await handleUpdateBalance(Number(realTimeAvailable));
     } catch (err) {
-      setError(err.message);
+      const formattedError = formatError(err);
+      setError(formattedError.message);
     }
   };
 
@@ -32,7 +35,8 @@ const UpdateBalanceModal = ({ cardId, isOpen, onClose, onFetchCardDetailsData })
       setError("")
       onClose();
     } catch (err) {
-      setError(err.message)
+      const formattedError = formatError(err);
+      setError(formattedError.message)
     }
   }
 
@@ -46,8 +50,10 @@ const UpdateBalanceModal = ({ cardId, isOpen, onClose, onFetchCardDetailsData })
           <h2>Update Real-time Available Credit</h2>
           <button className="close-button" onClick={onClose}>&times;</button>
         </div>
-        <form onSubmit={handleSubmit} className="update-balance-form">
+        
           {error && <div className="error-message">{error}</div>}
+
+        <form onSubmit={handleSubmit} className="update-balance-form">
           <div className="form-group">
             <label htmlFor="available-credit">Available Credit
               <InfoIcon message={TOOLTIP_MESSAGES.REAL_TIME_AVAILABLE} label="Real-time Available Credit" />
@@ -81,7 +87,7 @@ const UpdateBalanceModal = ({ cardId, isOpen, onClose, onFetchCardDetailsData })
 UpdateBalanceModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  onUpdateBalance: PropTypes.func.isRequired
+  onFetchCardDetailsData: PropTypes.func.isRequired
 };
 
-export default UpdateBalanceModal; 
+export default withErrorBoundary(UpdateBalanceModal);

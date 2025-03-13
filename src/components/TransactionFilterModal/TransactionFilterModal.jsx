@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { getAllCards, getUserCategories } from "../../services/api";
 import "./TransactionFilterModal.css";
+import { formatError } from '../../utils/errorHandler';
+import { withErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
 
 function TransactionFilterModal({ isOpen, onClose, onApplyFilters, monthlyExpenseTx = false, currentFilters }) {
   const [cards, setCards] = useState([]);
@@ -28,7 +30,8 @@ function TransactionFilterModal({ isOpen, onClose, onApplyFilters, monthlyExpens
         setCards(fetchedCards);
         setCategories(fetchedCategories.categories);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        const formattedError = formatError(error);
+        console.error("Error fetching data:", formattedError.message);
       }
     };
     fetchData();
@@ -232,4 +235,4 @@ function TransactionFilterModal({ isOpen, onClose, onApplyFilters, monthlyExpens
   );
 }
 
-export default TransactionFilterModal; 
+export default withErrorBoundary(TransactionFilterModal);

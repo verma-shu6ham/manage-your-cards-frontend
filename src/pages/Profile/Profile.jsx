@@ -6,8 +6,8 @@ import Loading from "../../components/Loading/Loading"
 import { useAuth } from "../../contexts/AuthContext/AuthContext"
 import { useNavigate } from "react-router-dom"
 import { localeCurrencyMap } from "../../constants/localeAndSymbol"
-
-import "./Profile.css"
+import { formatError } from "../../utils/errorHandler"
+import { withErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary'
 
 function Profile() {
   const { logout, locale, setLocale } = useAuth()
@@ -29,7 +29,8 @@ function Profile() {
       setLocale(data.locale)
       setLoading(false)
     } catch (err) {
-      setError("Failed to update country")
+      const formattedError = formatError(err);
+      setError(formattedError.message)
       setLoading(false)
     }
   }
@@ -41,7 +42,8 @@ function Profile() {
         setProfileData(data)
         setLoading(false)
       } catch (err) {
-        setError("Failed to fetch profile data")
+        const formattedError = formatError(err);
+        setError(formattedError.message)
         setLoading(false)
       }
     }
@@ -63,7 +65,8 @@ function Profile() {
       setCategories(data.categories)
       setSubSectionLoading(false)
     } catch (err) {
-      setError("Failed to fetch categories. Please try again.")
+      const formattedError = formatError(err);
+      setError(formattedError.message)
       setSubSectionLoading(false)
     }
   }
@@ -74,7 +77,8 @@ function Profile() {
       setCards(data)
       setSubSectionLoading(false)
     } catch (err) {
-      setError("Failed to fetch cards. Please try again.")
+      const formattedError = formatError(err);
+      setError(formattedError.message)
     } finally {
       setSubSectionLoading(false)
     }
@@ -88,7 +92,8 @@ function Profile() {
       await fetchCategories()
       setNewCategory("")
     } catch (err) {
-      setError("Failed to add category. Please try again.")
+      const formattedError = formatError(err);
+      setError(formattedError.message)
     }
   }
 
@@ -105,7 +110,8 @@ function Profile() {
       setNewSubcategory("")
       setSelectedCategory("")
     } catch (err) {
-      setError("Failed to add subcategory. Please try again.")
+      const formattedError = formatError(err);
+      setError(formattedError.message)
     }
   }
 
@@ -116,7 +122,8 @@ function Profile() {
         await deleteCategory({ categoryId })
         await fetchCategories()
       } catch (err) {
-        setError("Failed to remove category. Please try again.")
+        const formattedError = formatError(err);
+        setError(formattedError.message)
       }
     }
   }
@@ -131,7 +138,8 @@ function Profile() {
         })
         await fetchCategories()
       } catch (err) {
-        setError("Failed to remove subcategory. Please try again.")
+        const formattedError = formatError(err);
+        setError(formattedError.message)
       }
     }
   }
@@ -143,7 +151,8 @@ function Profile() {
         await deleteCard(cardId)
         fetchCards()
       } catch (err) {
-        setError("Failed to delete card. Please try again.")
+        const formattedError = formatError(err);
+        setError(formattedError.message)
       }
     }
   }
@@ -156,7 +165,8 @@ function Profile() {
         logout()
         navigate("/login")
       } catch (err) {
-        setError("Failed to delete account. Please try again.")
+        const formattedError = formatError(err);
+        setError(formattedError.message)
       }
     }
   }
@@ -440,4 +450,4 @@ function Profile() {
   )
 }
 
-export default Profile
+export default withErrorBoundary(Profile)

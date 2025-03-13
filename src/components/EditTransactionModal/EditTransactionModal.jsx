@@ -5,12 +5,15 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { updateTransaction, getUserCategories } from '../../services/api';
 import { formatDateTime } from '../../utils/mathUtils';
 import { useAuth } from "../../contexts/AuthContext/AuthContext.jsx";
+import { withErrorBoundary } from '../ErrorBoundary/ErrorBoundary'
+import { formatError } from '../../utils/errorHandler.js';
 import _ from 'lodash';
 
 import './EditTransactionModal.css';
 
 const EditTransactionModal = ({ isOpen, onClose, transaction, onTransactionEdited }) => {
   const { locale } = useAuth();
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     description: '',
     amount: '',
@@ -40,8 +43,9 @@ const EditTransactionModal = ({ isOpen, onClose, transaction, onTransactionEdite
       try {
         const fetchedCategories = await getUserCategories();
         setCategories(fetchedCategories.categories);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
+      } catch (err) {
+        const formattedError = formatError(err);
+        setError(formattedError.message);
       }
     };
     fetchCategories();
@@ -97,8 +101,9 @@ const EditTransactionModal = ({ isOpen, onClose, transaction, onTransactionEdite
     try {
       await updateTransaction(transaction._id, formData);
       onTransactionEdited();
-    } catch (error) {
-      console.error("Error updating transaction:", error);
+    } catch (err) {
+      const formattedError = formatError(err);
+      setError(formattedError.message);
     }
   };
 
@@ -113,6 +118,9 @@ const EditTransactionModal = ({ isOpen, onClose, transaction, onTransactionEdite
             <FontAwesomeIcon icon={faTimes} />
           </button>
         </div>
+
+        {error && <div className="error-message">{error}</div>}
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="description">Description</label>
@@ -221,4 +229,4 @@ EditTransactionModal.propTypes = {
   onTransactionEdited: PropTypes.func.isRequired
 };
 
-export default EditTransactionModal; 
+export default withErrorBoundary(EditTransactionModal); 

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useTheme } from '../../contexts/ThemeContext/ThemeContext';
+import { withErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
 import './UpdateAlert.css';
 
 const UpdateAlert = () => {
-  const { theme } = useTheme();
   const [showUpdateAlert, setShowUpdateAlert] = useState(false);
   const [waitingWorker, setWaitingWorker] = useState(null);
 
@@ -74,4 +73,4 @@ const UpdateAlert = () => {
   );
 };
 
-export default UpdateAlert;
+export default withErrorBoundary(UpdateAlert);
