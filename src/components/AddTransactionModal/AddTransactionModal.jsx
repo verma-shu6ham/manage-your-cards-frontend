@@ -86,7 +86,6 @@ const AddTransactionModal = ({ isOpen, onClose, preselectedCardId, onTransaction
             resetForm();
             onClose();
         } catch (err) {
-            console.log('err', err);
             const formattedError = formatError(err);
             setError(formattedError.message);
         }
