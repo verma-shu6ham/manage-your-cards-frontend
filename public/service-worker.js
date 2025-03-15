@@ -76,24 +76,32 @@ const logCacheOperation = (type, url, status = null) => {
   }
 };
 
-// Helper function to get user-friendly error message for non-GET requests
-const getNonGetErrorMessage = (url) => {
-  return 'This action requires an internet connection. Please connect to continue.';
-};
-
 // Cache and return requests
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
   // console.log('[Service Worker] Fetch event:', url.pathname, 'Method:', event.request.method);
 
-  // Handle API GET requests
-  if (isApiRequest(url) && isGetRequest(event.request)) {
-    event.respondWith(
-      (async () => {
-        try {
+  event.respondWith(
+    (async () => {
+      try {
+        // Handle API GET requests
+        if (isApiRequest(url) && isGetRequest(event.request)) {
           // logCacheOperation('API Request', url.pathname);
 
-          // Try cache first
+          // If online, try network
+          if (navigator.onLine) {
+            const networkResponse = await fetch(event.request);
+            if (networkResponse && networkResponse.status === 200) {
+              const cache = await caches.open(DYNAMIC_CACHE);
+              cache.put(event.request.url, networkResponse.clone());
+              updateLastOnlineTimestamp();
+              // logCacheOperation('Cached Response', url.pathname, networkResponse.status);
+            }
+            return networkResponse;
+          }
+
+          // If offline, try cache
+          // logCacheOperation('Cache Miss', url.pathname);
           const cachedResponse = await caches.match(event.request.url);
           if (cachedResponse) {
             // logCacheOperation('Cache Hit', url.pathname);
@@ -104,70 +112,47 @@ self.addEventListener('fetch', event => {
                 'X-Cache-Date': cachedResponse.headers.get('date') || new Date().toISOString()
               }
             });
+          } else {
+            return new Response(
+              JSON.stringify({
+                message: 'Some content is not cached. Please connect to the internet once to enable offline access next time.',
+                type: 'network_error',
+                timestamp: new Date().toISOString()
+              }),
+              {
+                status: 503,
+                headers: { 'Content-Type': 'application/json' }
+              }
+            );
           }
+        }
 
-          // logCacheOperation('Cache Miss', url.pathname);
-          // If not in cache, try network
-          const networkResponse = await fetch(event.request);
-          if (networkResponse && networkResponse.status === 200) {
-            const cache = await caches.open(DYNAMIC_CACHE);
-            cache.put(event.request.url, networkResponse.clone());
-            updateLastOnlineTimestamp();
-            // logCacheOperation('Cached Response', url.pathname, networkResponse.status);
+        // Handle API non-GET requests
+        if (isApiRequest(url) && !isGetRequest(event.request)) {
+          // console.log('[Service Worker] Non-GET API Request:', url.pathname);
+          try {
+            // Try network first
+            const networkResponse = await fetch(event.request);
+            // console.log('[Service Worker] Network Response:', networkResponse);
+            return networkResponse;
+          } catch (error) {
+            // logCacheOperation('Error', url.pathname, errorMessage);
+            return new Response(
+              JSON.stringify({
+                message: 'This action requires an internet connection. Please connect to continue.',
+                type: 'offline_error',
+                timestamp: new Date().toISOString()
+              }),
+              {
+                status: 503,
+                headers: { 'Content-Type': 'application/json' }
+              }
+            );
           }
-          return networkResponse;
-        } catch (error) {
-          // logCacheOperation('Error', url.pathname, error.message);
-          return new Response(
-            JSON.stringify({
-              error: 'Failed to fetch resource',
-              type: 'network_error',
-              timestamp: new Date().toISOString()
-            }),
-            {
-              status: 503,
-              headers: { 'Content-Type': 'application/json' }
-            }
-          );
         }
-      })()
-    );
-  }
 
-  // Handle API non-GET requests
-  if (isApiRequest(url) && !isGetRequest(event.request)) {
-    // console.log('[Service Worker] Non-GET API Request:', url.pathname);
-    event.respondWith(
-      (async () => {
-        try {
-          // Try network first
-          const networkResponse = await fetch(event.request);
-          return networkResponse;
-        } catch (error) {
-          // If network fails, return specific offline message
-          const errorMessage = getNonGetErrorMessage(url);
-          // logCacheOperation('Error', url.pathname, errorMessage);
-          return new Response(
-            JSON.stringify({
-              message: errorMessage,
-              type: 'offline_error',
-              timestamp: new Date().toISOString()
-            }),
-            {
-              status: 503,
-              headers: { 'Content-Type': 'application/json' }
-            }
-          );
-        }
-      })()
-    );
-  }
-
-  // Handle same-origin requests (frontend assets)
-  if (url.origin === self.location.origin) {
-    event.respondWith(
-      (async () => {
-        try {
+        // Handle same-origin requests (frontend assets)
+        if (url.origin === self.location.origin) {
           // logCacheOperation('Frontend Request', url.pathname);
 
           if (isGetRequest(event.request)) {
@@ -191,23 +176,26 @@ self.addEventListener('fetch', event => {
             // For non-GET requests to frontend, just try network
             return fetch(event.request);
           }
-        } catch (error) {
-          // logCacheOperation('Error', url.pathname, error.message);
-          return new Response(
-            JSON.stringify({
-              error: 'Failed to fetch resource',
-              type: 'network_error',
-              timestamp: new Date().toISOString()
-            }),
-            {
-              status: 503,
-              headers: { 'Content-Type': 'application/json' }
-            }
-          );
         }
-      })()
-    );
-  }
+
+        // Default fallback for any other requests
+        return fetch(event.request);
+      } catch (error) {
+        // logCacheOperation('Error', url.pathname, error.message);
+        return new Response(
+          JSON.stringify({
+            message: 'Failed to fetch resource',
+            type: 'network_error',
+            timestamp: new Date().toISOString()
+          }),
+          {
+            status: 503,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+      }
+    })()
+  );
 });
 
 // Install a service worker
