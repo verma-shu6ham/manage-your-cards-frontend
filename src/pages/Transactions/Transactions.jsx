@@ -38,7 +38,6 @@ function Transactions() {
   const fetchTransactionData = async (filters = {}) => {
     setLoading(true);
     try {
-      console.log(filters)
       const fetchedTransactions = await getTransactions(filters);
       setTransactions(fetchedTransactions.transactions);
     } catch (error) {

@@ -10,24 +10,6 @@ const api = axios.create({
   },
 })
 
-// Helper function to check if we're offline and if the request is non-GET
-const shouldShowOfflineWarning = (config) => {
-  return !navigator.onLine && config.method !== 'get';
-};
-
-// Helper function to format error messages
-const formatErrorMessage = (error) => {
-  if (error.response) {
-    // Server error with response
-    return error.response.data?.message || error.response.statusText;
-  } else if (error.request) {
-    // Request made but no response
-    return 'No response received from server. Please try again.';
-  } else {
-    // Error in setting up the request
-    return error.message;
-  }
-};
 
 api.interceptors.request.use(
   config => {
@@ -35,16 +17,6 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    
-    // Check for offline status before making non-GET requests
-    if (shouldShowOfflineWarning(config)) {
-      throw new Error({
-        message: 'This action requires an internet connection. Please connect to continue.',
-        status: 503,
-        statusText: 'Service Unavailable'
-      });
-    }
-    
     return config;
   },
   error => Promise.reject(error)
@@ -55,7 +27,9 @@ api.interceptors.response.use(
   error => {
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
-      window.location.href = '/login';
+      setTimeout(() => {
+        window.location.href = '/login';
+      }, 2000);
     }
     return Promise.reject(error);
   }
@@ -67,10 +41,8 @@ export const login = async (email, password) => {
     const response = await api.post("/auth/login", { email, password })
     return response.data
   } catch (err) {
-    throw new Error({
-      message: formatErrorMessage(err) || "Login failed. Please try again.",
-      status: err.response?.status || 500,
-      statusText: err.response?.statusText || "Internal Server Error"
+    throw handleApiError(err, {
+      message: "Login failed. Please check your credentials and try again."
     });
   }
 }
@@ -80,10 +52,8 @@ export const signup = async (name, email, locale, password) => {
     const response = await api.post("/auth/signup", { name, email, locale, password })
     return response.data
   } catch (err) {
-    throw new Error({
-      message: formatErrorMessage(err) || "Signup failed. Please try again.",
-      status: err.response?.status || 500,
-      statusText: err.response?.statusText || "Internal Server Error"
+    throw handleApiError(err, {
+      message: "Signup failed. Please check your details and try again."
     });
   }
 }
@@ -94,10 +64,8 @@ export const addCreditCard = async (cardData) => {
     const response = await api.post("/cards/add-card", cardData)
     return response.data
   } catch (err) {
-    throw new Error({
-      message: formatErrorMessage(err) || "Failed to add credit card. Please try again.",
-      status: err.response?.status || 500,
-      statusText: err.response?.statusText || "Internal Server Error"
+    throw handleApiError(err, {
+      message: "Failed to add credit card. Please check your card details and try again."
     });
   }
 }
@@ -107,10 +75,8 @@ export const getAllCards = async () => {
     const response = await api.get("/cards/all-cards")
     return response.data
   } catch (err) {
-    throw new Error({
-      message: formatErrorMessage(err) || "Failed to fetch credit cards. Please try again.",
-      status: err.response?.status || 500,
-      statusText: err.response?.statusText || "Internal Server Error"
+    throw handleApiError(err, {
+      message: "Failed to fetch credit cards. Please try again later."
     });
   }
 }
@@ -120,10 +86,8 @@ export const getCardDetails = async (cardId) => {
     const response = await api.get(`/cards/${cardId}`)
     return response.data
   } catch (err) {
-    throw new Error({
-      message: formatErrorMessage(err) || "Failed to fetch card details. Please try again.",
-      status: err.response?.status || 500,
-      statusText: err.response?.statusText || "Internal Server Error"
+    throw handleApiError(err, {
+      message: "Failed to fetch card details. Please try again later."
     });
   }
 }
@@ -135,10 +99,8 @@ export const updateRealTimeAvailableCredit = async (cardId, realTimeAvailableCre
     })
     return response.data
   } catch (err) {
-    throw new Error({
-      message: formatErrorMessage(err) || "Failed to update available credit. Please try again.",
-      status: err.response?.status || 500,
-      statusText: err.response?.statusText || "Internal Server Error"
+    throw handleApiError(err, {
+      message: "Failed to update real-time available credit. Please try again later."
     });
   }
 }
@@ -146,28 +108,22 @@ export const updateRealTimeAvailableCredit = async (cardId, realTimeAvailableCre
 export const deleteCard = async (cardId) => {
   try {
     const response = await api.delete(`/cards/${cardId}`)
-    return response.data
+    return response;
   } catch (err) {
-    throw new Error({
-      message: formatErrorMessage(err) || "Failed to delete card. Please try again.",
-      status: err.response?.status || 500,
-      statusText: err.response?.statusText || "Internal Server Error"
+    throw handleApiError(err, {
+      message: "Failed to delete credit card. Please try again later."
     });
   }
 }
 
 // Transaction endpoints
 export const createTransaction = async (transactionData) => {
-  console.log("createTransaction")
   try {
     const response = await api.post("/transactions", transactionData)
     return response.data
   } catch (err) {
-    console.log('errr', err)
-    throw new Error({
-      message: formatErrorMessage(err) || "Failed to create transaction. Please try again.",
-      status: err.response?.status || 500,
-      statusText: err.response?.statusText || "Internal Server Error"
+    throw handleApiError(err, {
+      message: "Failed to create transaction. Please check your details and try again."
     });
   }
 }
@@ -177,10 +133,8 @@ export const createCashTransaction = async (transactionData) => {
     const response = await api.post("/transactions/cash", transactionData)
     return response.data
   } catch (err) {
-    throw new Error({
-      message: formatErrorMessage(err) || "Failed to create cash transaction. Please try again.",
-      status: err.response?.status || 500,
-      statusText: err.response?.statusText || "Internal Server Error"
+    throw handleApiError(err, {
+      message: "Failed to create cash transaction. Please check your details and try again."
     });
   }
 }
@@ -190,10 +144,8 @@ export const getTransactions = async (filters = {}) => {
     const response = await api.get("/transactions", { params: filters })
     return response.data
   } catch (err) {
-    throw new Error({
-      message: formatErrorMessage(err) || "Failed to fetch transactions. Please try again.",
-      status: err.response?.status || 500,
-      statusText: err.response?.statusText || "Internal Server Error"
+    throw handleApiError(err, {
+      message: "Failed to fetch transactions. Please try again later."
     });
   }
 }
@@ -203,10 +155,8 @@ export const deleteTransaction = async (transactionId) => {
     const response = await api.delete(`/transactions/${transactionId}`)
     return response.data
   } catch (err) {
-    throw new Error({
-      message: formatErrorMessage(err) || "Failed to delete transaction. Please try again.",
-      status: err.response?.status || 500,
-      statusText: err.response?.statusText || "Internal Server Error"
+    throw handleApiError(err, {
+      message: "Failed to delete transaction. Please try again later."
     });
   }
 }
@@ -216,10 +166,8 @@ export const updateTransaction = async (transactionId, transactionData) => {
     const response = await api.patch(`/transactions/${transactionId}`, transactionData)
     return response.data
   } catch (err) {
-    throw new Error({
-      message: formatErrorMessage(err) || "Failed to update transaction. Please try again.",
-      status: err.response?.status || 500,
-      statusText: err.response?.statusText || "Internal Server Error"
+    throw handleApiError(err, {
+      message: "Failed to update transaction. Please check your details and try again."
     });
   }
 }
@@ -227,39 +175,65 @@ export const updateTransaction = async (transactionId, transactionData) => {
 // Monthly Expense endpoints
 export const getMonthlySpending = async (params) => {
   try {
-    const response = await api.get("/transactions/monthly-spending", { params })
-    return response.data
+    const cleanParams = Object.entries(params).reduce((acc, [key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        acc[key] = value;
+      }
+      return acc;
+    }, {});
+
+    cleanParams.spendingType = 'monthly';
+
+
+    const response = await api.get("/transactions/monthly-spending", {
+      params: cleanParams
+    });
+
+    return response.data;
   } catch (err) {
-    throw new Error({
-      message: formatErrorMessage(err) || "Failed to fetch monthly spending. Please try again.",
-      status: err.response?.status || 500,
-      statusText: err.response?.statusText || "Internal Server Error"
+    throw handleApiError(err, {
+      message: "Failed to fetch monthly spending data. Please try again later."
     });
   }
 }
 
 export const getBillingSpending = async (params) => {
   try {
-    const response = await api.get("/transactions/billing-spending", { params })
-    return response.data
+    const cleanParams = Object.entries(params).reduce((acc, [key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        acc[key] = value;
+      }
+      return acc;
+    }, {});
+    cleanParams.spendingType = 'billing';
+
+    const response = await api.get("/transactions/monthly-spending", {
+      params: cleanParams
+    });
+    return response.data.monthlySummary[0];
   } catch (err) {
-    throw new Error({
-      message: formatErrorMessage(err) || "Failed to fetch billing spending. Please try again.",
-      status: err.response?.status || 500,
-      statusText: err.response?.statusText || "Internal Server Error"
+    throw handleApiError(err, {
+      message: "Failed to fetch billing spending data. Please try again later."
     });
   }
 }
 
 export const getSpendingSummary = async (params) => {
   try {
-    const response = await api.get("/transactions/spending-summary", { params })
-    return response.data
+    const cleanParams = Object.entries(params).reduce((acc, [key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        acc[key] = value;
+      }
+      return acc;
+    }, {});
+
+    const response = await api.get("/transactions/spending-summary", {
+      params: cleanParams
+    });
+    return response.data.summary;
   } catch (err) {
-    throw new Error({
-      message: formatErrorMessage(err) || "Failed to fetch spending summary. Please try again.",
-      status: err.response?.status || 500,
-      statusText: err.response?.statusText || "Internal Server Error"
+    throw handleApiError(err, {
+      message: "Failed to fetch spending summary. Please try again later."
     });
   }
 }
@@ -270,10 +244,8 @@ export const getProfile = async () => {
     const response = await api.get("/user/profile")
     return response.data
   } catch (err) {
-    throw new Error({
-      message: formatErrorMessage(err) || "Failed to fetch profile. Please try again.",
-      status: err.response?.status || 500,
-      statusText: err.response?.statusText || "Internal Server Error"
+    throw handleApiError(err, {
+      message: "Failed to fetch profile information. Please try again later."
     });
   }
 }
@@ -283,10 +255,8 @@ export const getUserCategories = async () => {
     const response = await api.get("/user/categories")
     return response.data
   } catch (err) {
-    throw new Error({
-      message: formatErrorMessage(err) || "Failed to fetch categories. Please try again.",
-      status: err.response?.status || 500,
-      statusText: err.response?.statusText || "Internal Server Error"
+    throw handleApiError(err, {
+      message: "Failed to fetch categories. Please try again later."
     });
   }
 }
@@ -296,10 +266,8 @@ export const updateLocale = async (locale) => {
     const response = await api.patch("/user/locale", { locale })
     return response.data
   } catch (err) {
-    throw new Error({
-      message: formatErrorMessage(err) || "Failed to update locale. Please try again.",
-      status: err.response?.status || 500,
-      statusText: err.response?.statusText || "Internal Server Error"
+    throw handleApiError(err, {
+      message: "Failed to update country preference. Please try again later."
     });
   }
 }
@@ -309,10 +277,8 @@ export const addCategory = async ({ category, subcategory }) => {
     const response = await api.post("/user/categories", { category, subcategory })
     return response.data
   } catch (err) {
-    throw new Error({
-      message: formatErrorMessage(err) || "Failed to add category. Please try again.",
-      status: err.response?.status || 500,
-      statusText: err.response?.statusText || "Internal Server Error"
+    throw handleApiError(err, {
+      message: "Failed to add category/subcategory. Please check your details and try again."
     });
   }
 }
@@ -322,10 +288,8 @@ export const deleteCategory = async (data) => {
     const response = await api.delete("/user/categories", { data })
     return response.data
   } catch (err) {
-    throw new Error({
-      message: formatErrorMessage(err) || "Failed to delete category. Please try again.",
-      status: err.response?.status || 500,
-      statusText: err.response?.statusText || "Internal Server Error"
+    throw handleApiError(err, {
+      message: "Failed to delete category/subcategory. Please try again later."
     });
   }
 }
@@ -335,10 +299,8 @@ export const deleteAccount = async () => {
     const response = await api.delete("/users/delete-account")
     return response.data
   } catch (err) {
-    throw new Error({
-      message: formatErrorMessage(err) || "Failed to delete account. Please try again.",
-      status: err.response?.status || 500,
-      statusText: err.response?.statusText || "Internal Server Error"
+    throw handleApiError(err, {
+      message: "Failed to delete account. Please try again later."
     });
   }
 }

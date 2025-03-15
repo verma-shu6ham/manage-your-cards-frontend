@@ -27,6 +27,7 @@ function Login() {
         localStorage.setItem('locale', data.user.locale)
         setLocale(data.user.locale)
         navigate("/dashboard")
+        window.location.reload();
       }
     } catch (err) {
       const formattedError = formatError(err);

@@ -38,7 +38,6 @@ function TransactionFilterModal({ isOpen, onClose, onApplyFilters, monthlyExpens
   }, []);
 
   useEffect(() => {
-    console.log(currentFilters)
     if (monthlyExpenseTx) {
       setFilters(prev => ({
         ...prev,
