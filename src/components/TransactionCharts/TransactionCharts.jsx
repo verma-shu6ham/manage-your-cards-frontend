@@ -40,6 +40,7 @@ const TransactionCharts = ({ filters }) => {
   const [loading, setLoading] = useState(true);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const { locale } = useAuth();
+  const [error, setError] = useState('');
 
   const months = [
     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -145,6 +146,7 @@ const TransactionCharts = ({ filters }) => {
     <div className="charts-container">
       <div className="charts-header">
         <h2>Transaction Analytics</h2>
+        {error && <div className="error-message">{error}</div>}
         <select
           value={selectedYear}
           onChange={(e) => setSelectedYear(Number(e.target.value))}

@@ -19,6 +19,7 @@ function TransactionFilterModal({ isOpen, onClose, onApplyFilters, monthlyExpens
     status: currentFilters?.status || "",
     paymentMethod: ""
   });
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -91,6 +92,7 @@ function TransactionFilterModal({ isOpen, onClose, onApplyFilters, monthlyExpens
           <h2>Filter Transactions</h2>
           <button className="close-button" onClick={onClose}>&times;</button>
         </div>
+        {error && <div className="error-message">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="filter-section">
             <h3>Select Cards</h3>
