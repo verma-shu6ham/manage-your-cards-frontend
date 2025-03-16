@@ -15,7 +15,10 @@ const OfflineAlert = () => {
       setIsOffline(false);
       setShowAlert(true);
       // Hide "Back Online" message after 3 seconds
-      setTimeout(() => setShowAlert(false), 3000);
+      setTimeout(() => {
+        setShowAlert(false)
+        window.location.reload();
+      }, 3000);
     };
 
     const handleOffline = () => {
@@ -52,15 +55,8 @@ const OfflineAlert = () => {
 
   if (!showAlert) return null;
 
-  const formatLastOnlineTime = (timestamp) => {
-    if (!timestamp) return '';
-    const date = new Date(timestamp);
-    return date.toLocaleTimeString();
-  };
-
   const getAlertContent = () => {
     if (!isOffline) {
-      window.location.reload();
       return {
         className: 'alert-success',
         message: '✓ Back Online! Updating data...'
