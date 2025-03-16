@@ -60,6 +60,7 @@ const OfflineAlert = () => {
 
   const getAlertContent = () => {
     if (!isOffline) {
+      window.location.reload();
       return {
         className: 'alert-success',
         message: '✓ Back Online! Updating data...'
