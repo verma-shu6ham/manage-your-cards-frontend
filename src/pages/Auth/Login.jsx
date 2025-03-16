@@ -67,6 +67,9 @@ function Login() {
           />
           <button className="show-password"  type="button" onClick={() => setShowPassword(prev => !prev)}>{showPassword ? `Hide` : 'Show'}</button>
         </span>
+        <div className="forgot-password">
+          <Link to="/forgot-password">Forgot password?</Link>
+        </div>
         <button type="submit" disabled={loading}>
           {loading ? "Logging in..." : "Log In"}
         </button>

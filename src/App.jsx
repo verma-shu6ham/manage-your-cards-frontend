@@ -5,6 +5,9 @@ import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import Navbar from './components/Navbar/Navbar';
 import Login from './pages/Auth/Login';
 import Signup from './pages/Auth/Signup';
+import VerifyEmail from './pages/Auth/VerifyEmail';
+import ForgotPassword from './pages/Auth/ForgotPassword';
+import ResetPassword from './pages/Auth/ResetPassword';
 import Home from './pages/Home/Home';
 import CardDetails from './pages/CardDetails/CardDetails';
 import Transactions from './pages/Transactions/Transactions';
@@ -34,6 +37,9 @@ function App() {
                   {/* Public Routes */}
                   <Route path="/login" element={<Login />} />
                   <Route path="/signup" element={<Signup />} />
+                  <Route path="/verify-email/:token" element={<VerifyEmail />} />
+                  <Route path="/forgot-password" element={<ForgotPassword />} />
+                  <Route path="/reset-password/:token" element={<ResetPassword />} />
 
                   {/* Protected Routes */}
                   <Route path="/dashboard" element={<PrivateRoute element={<Home />} />} />

@@ -10,7 +10,6 @@ const api = axios.create({
   },
 })
 
-
 api.interceptors.request.use(
   config => {
     const token = localStorage.getItem('token');
@@ -29,7 +28,7 @@ api.interceptors.response.use(
       localStorage.removeItem('token');
       setTimeout(() => {
         window.location.href = '/login';
-      }, 2000);
+      }, 3000);
     }
     return Promise.reject(error);
   }
@@ -54,6 +53,50 @@ export const signup = async (name, email, locale, password) => {
   } catch (err) {
     throw handleApiError(err, {
       message: "Signup failed. Please check your details and try again."
+    });
+  }
+}
+
+export const verifyEmail = async (token) => {
+  try {
+    const response = await api.get(`/auth/verify-email/${token}`)
+    return response.data
+  } catch (err) {
+    throw handleApiError(err, {
+      message: "Email verification failed. The link may be expired or invalid."
+    });
+  }
+}
+
+export const resendVerification = async (email) => {
+  try {
+    const response = await api.post("/auth/resend-verification", { email })
+    return response.data
+  } catch (err) {
+    throw handleApiError(err, {
+      message: "Failed to resend verification email. Please try again later."
+    });
+  }
+}
+
+export const forgotPassword = async (email) => {
+  try {
+    const response = await api.post("/auth/forgot-password", { email })
+    return response.data
+  } catch (err) {
+    throw handleApiError(err, {
+      message: "Failed to process password reset request. Please try again later."
+    });
+  }
+}
+
+export const resetPassword = async (token, password) => {
+  try {
+    const response = await api.post(`/auth/reset-password/${token}`, { password })
+    return response.data
+  } catch (err) {
+    throw handleApiError(err, {
+      message: "Password reset failed. The link may be expired or invalid."
     });
   }
 }
@@ -296,7 +339,7 @@ export const deleteCategory = async (data) => {
 
 export const deleteAccount = async () => {
   try {
-    const response = await api.delete("/users/delete-account")
+    const response = await api.delete("/user/delete-account")
     return response.data
   } catch (err) {
     throw handleApiError(err, {

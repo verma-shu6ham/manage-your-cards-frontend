@@ -17,6 +17,8 @@ function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [passwordMismatch, setPasswordMismatch] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [signupSuccess, setSignupSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleName = (e) => {
@@ -62,9 +64,14 @@ function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await signup(name, email, locale, password);
-      navigate("/dashboard");
+      setLoading(true);
+      setError("");
+      const response = await signup(name, email, locale, password);
+      setLoading(false);
+      setSignupSuccess(true);
+      // Don't navigate immediately, show success message first
     } catch (err) {
+      setLoading(false);
       const formattedError = formatError(err);
       setError(formattedError.message);
     }
@@ -89,81 +96,105 @@ function Signup() {
 
       {error && <p className="error">{error}</p>}
       
-      <form onSubmit={handleSubmit} className="auth-form">
-        <span className="label-input">
-          <label htmlFor="name">Full Name</label>
-          <input type="text" placeholder="Name" value={name} onChange={handleName} required />
-        </span>
-        <span className="label-input">
-          <label htmlFor="email">Email</label>
-          <input type="email" placeholder="Email" value={email} onChange={handleEmail} required />
-        </span>
-        <span className="label-input country-dropdown">
-          <label htmlFor="country">Country</label>
-          <input
-            type="text"
-            value={inputValue}
-            onChange={handleInputChange}
-            placeholder="Type country or select country"
-            onFocus={() => setCountryDropdown(true)}
-          />
-          <button
-            className="country-dropdown-icon"
-            type="button"
-            onClick={() => setCountryDropdown((prev) => !prev)}
+      {signupSuccess ? (
+        <div className="verification-status success">
+          <h3>Account Created Successfully!</h3>
+          <p>Thank you for signing up, {name}!</p>
+          <p>We've sent a verification email to <strong>{email}</strong>.</p>
+          <p>Please check your inbox and click the verification link to activate your account.</p>
+          <p className="verification-note">
+            If you don't see the email, please check your spam folder.
+          </p>
+          <button 
+            className="auth-button"
+            onClick={() => navigate("/login")}
+            style={{ marginTop: "20px" }}
           >
-            {countryDropdown ? "▲" : "▼"}
+            Go to Login
           </button>
-          {countryDropdown && (
-            <ul
-              className="country-dropdown-list"
-              onClick={(e) => e.stopPropagation()}
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="auth-form">
+          <span className="label-input">
+            <label htmlFor="name">Full Name</label>
+            <input type="text" placeholder="Name" value={name} onChange={handleName} required />
+          </span>
+          <span className="label-input">
+            <label htmlFor="email">Email</label>
+            <input type="email" placeholder="Email" value={email} onChange={handleEmail} required />
+          </span>
+          <span className="label-input country-dropdown">
+            <label htmlFor="country">Country</label>
+            <input
+              type="text"
+              value={inputValue}
+              onChange={handleInputChange}
+              placeholder="Type country or select country"
+              onFocus={() => setCountryDropdown(true)}
+            />
+            <button
+              className="country-dropdown-icon"
+              type="button"
+              onClick={() => setCountryDropdown((prev) => !prev)}
             >
-              {filteredOptions.length > 0 ? (
-                filteredOptions.map(([loc, { country, currency }]) => (
-                  <li key={loc} onClick={() => handleSelectChange(loc)}>
-                    {country} ({currency})
-                  </li>
-                ))
-              ) : (
-                <li>No matching results</li>
-              )}
-            </ul>
-          )}
-        </span>
-        <span className="label-input">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={handlePassword}
-            required
-          />
-        </span>
-        <span className="label-input">
-          <label htmlFor="confirmPassword">Confirm Password</label>
-          <input
-            className={`label-input ${passwordMismatch ? "mismatch" : ""}`}
-            type={showPassword ? "text" : "password"}
-            placeholder="Confirm Password"
-            value={confirmPassword}
-            onChange={handleConfirmPassword}
-            required
-          />
-          <button
-            className="show-password"
-            type="button"
-            onClick={() => setShowPassword((prev) => !prev)}
-          >
-            {showPassword ? `Hide` : "Show"}
+              {countryDropdown ? "▲" : "▼"}
+            </button>
+            {countryDropdown && (
+              <ul
+                className="country-dropdown-list"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {filteredOptions.length > 0 ? (
+                  filteredOptions.map(([loc, { country, currency }]) => (
+                    <li key={loc} onClick={() => handleSelectChange(loc)}>
+                      {country} ({currency})
+                    </li>
+                  ))
+                ) : (
+                  <li>No matching results</li>
+                )}
+              </ul>
+            )}
+          </span>
+          <span className="label-input">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={handlePassword}
+              required
+            />
+          </span>
+          <span className="label-input">
+            <label htmlFor="confirmPassword">Confirm Password</label>
+            <input
+              className={`label-input ${passwordMismatch ? "mismatch" : ""}`}
+              type={showPassword ? "text" : "password"}
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={handleConfirmPassword}
+              required
+            />
+            <button
+              className="show-password"
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+            >
+              {showPassword ? `Hide` : "Show"}
+            </button>
+          </span>
+          <button type="submit" disabled={loading}>
+            {loading ? "Signing Up..." : "Sign Up"}
           </button>
-        </span>
-        <button type="submit">Sign Up</button>
-      </form>
-      <p>
-        Already have an account? <Link to="/login">Log in</Link>
-      </p>
+        </form>
+      )}
+      
+      {!signupSuccess && (
+        <p>
+          Already have an account? <Link to="/login">Log in</Link>
+        </p>
+      )}
     </div>
   );
 }
