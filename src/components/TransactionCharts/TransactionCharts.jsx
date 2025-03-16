@@ -68,12 +68,12 @@ const TransactionCharts = ({ filters }) => {
         getMonthlySpending(apiFilters),
         getSpendingSummary(dateFilters)
       ]);
-      
+
       setMonthlySpending(monthly.monthlySummary);
       setSpendingSummary(summary);
     } catch (error) {
       const formattedError = formatError(error);
-      console.error('Error fetching data:', formattedError.message);
+      setError(formattedError.message);
     } finally {
       setLoading(false);
     }
@@ -111,7 +111,7 @@ const TransactionCharts = ({ filters }) => {
     datasets: [{
       label: 'Total Spending by Category',
       data: spendingSummary.map(item => Math.abs(item.total)),
-      backgroundColor: spendingSummary.map((_, index) => 
+      backgroundColor: spendingSummary.map((_, index) =>
         `hsla(${(index * 360) / spendingSummary.length}, 70%, 50%, 0.8)`
       ),
       borderWidth: 1,
@@ -120,19 +120,19 @@ const TransactionCharts = ({ filters }) => {
 
   // Subcategory breakdown data
   const subcategoryData = {
-    labels: spendingSummary.flatMap(category => 
+    labels: spendingSummary.flatMap(category =>
       category.subcategories
         .filter(sub => sub.subcategory) // Filter out empty subcategories
         .map(sub => `${category._id}: ${sub.subcategory || 'General'}`)
     ),
     datasets: [{
       label: 'Spending by Subcategory',
-      data: spendingSummary.flatMap(category => 
+      data: spendingSummary.flatMap(category =>
         category.subcategories
           .filter(sub => sub.subcategory)
           .map(sub => Math.abs(sub.total))
       ),
-      backgroundColor: spendingSummary.flatMap(category => 
+      backgroundColor: spendingSummary.flatMap(category =>
         category.subcategories
           .filter(sub => sub.subcategory)
           .map((_, index) => `hsla(${Math.random() * 360}, 70%, 50%, 0.8)`)
@@ -145,8 +145,8 @@ const TransactionCharts = ({ filters }) => {
     <div className="charts-container">
       <div className="charts-header">
         <h2>Transaction Analytics</h2>
-        <select 
-          value={selectedYear} 
+        <select
+          value={selectedYear}
           onChange={(e) => setSelectedYear(Number(e.target.value))}
           className="year-selector"
         >
@@ -165,7 +165,7 @@ const TransactionCharts = ({ filters }) => {
         <div className="chart-card">
           <h3>Spending by Category</h3>
           <div className="chart-wrapper">
-            <Doughnut 
+            <Doughnut
               data={categoryData}
               options={{
                 plugins: {
@@ -204,7 +204,7 @@ const TransactionCharts = ({ filters }) => {
         <div className="chart-card">
           <h3>Spending by Subcategory</h3>
           <div className="chart-wrapper">
-            <Doughnut 
+            <Doughnut
               data={subcategoryData}
               options={{
                 plugins: {

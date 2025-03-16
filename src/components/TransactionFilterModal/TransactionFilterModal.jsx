@@ -31,7 +31,7 @@ function TransactionFilterModal({ isOpen, onClose, onApplyFilters, monthlyExpens
         setCategories(fetchedCategories.categories);
       } catch (error) {
         const formattedError = formatError(error);
-        console.error("Error fetching data:", formattedError.message);
+        setError(formattedError.message);
       }
     };
     fetchData();
