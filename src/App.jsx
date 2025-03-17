@@ -17,10 +17,44 @@ import MonthlyExpense from './pages/MonthlyExpense/MonthlyExpense';
 import PWAInstallPrompt from './components/PWAInstallPrompt/PWAInstallPrompt';
 import OfflineAlert from './components/OfflineAlert/OfflineAlert';
 import UpdateAlert from './components/UpdateAlert/UpdateAlert';
+import Landing from './pages/Landing/Landing';
 import { ThemeProvider } from './contexts/ThemeContext/ThemeContext';
 import { TooltipContext } from './contexts/TooltipContext';
 import './App.css';
 import './ScrollStyles.css';
+
+// NavigationHandler Component to handle navbar visibility
+const NavigationHandler = ({ children }) => {
+  const [showNavbar, setShowNavbar] = useState(true);
+  
+  // This component will handle showing or hiding navbar based on the path
+  return (
+    <>
+      {showNavbar && <Navbar />}
+      <Routes>
+    
+        {/* Public Routes - All show navbar */}
+        <Route path="/" element={<PublicRoute element={<Landing setShowNavbar={setShowNavbar} />} />} />
+        <Route path="/login" element={<PublicRoute element={<Login setShowNavbar={() => setShowNavbar(true)} />} />} />
+        <Route path="/signup" element={<PublicRoute element={<Signup setShowNavbar={() => setShowNavbar(true)} />} />} />
+        <Route path="/verify-email/:token" element={<PublicRoute element={<VerifyEmail setShowNavbar={() => setShowNavbar(true)} />} />} />
+        <Route path="/forgot-password" element={<PublicRoute element={<ForgotPassword setShowNavbar={() => setShowNavbar(true)} />} />} />
+        <Route path="/reset-password/:token" element={<PublicRoute element={<ResetPassword setShowNavbar={() => setShowNavbar(true)} />} />} />
+
+        {/* Protected Routes - All show navbar */}
+        <Route path="/dashboard" element={<PrivateRoute element={<Home setShowNavbar={() => setShowNavbar(true)} />} />} />
+        <Route path="/card/:id" element={<PrivateRoute element={<CardDetails setShowNavbar={() => setShowNavbar(true)} />} />} />
+        <Route path="/transactions" element={<PrivateRoute element={<Transactions setShowNavbar={() => setShowNavbar(true)} />} />} />
+        <Route path="/monthlyExpenseTxs" element={<PrivateRoute element={<MonthlyExpense setShowNavbar={() => setShowNavbar(true)} />} />} />
+        <Route path="/profile" element={<PrivateRoute element={<Profile setShowNavbar={() => setShowNavbar(true)} />} />} />
+
+        {/* Default redirect */}
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+      {children}
+    </>
+  );
+};
 
 function App() {
   const [tooltipContent, setTooltipContent] = useState("");
@@ -32,33 +66,16 @@ function App() {
         <TooltipContext.Provider value={[setTooltipContent, setShowTooltip, tooltipContent, showTooltip]}>
           <Router>
             <div className="app">
-              <Navbar />
               <main className="main-content">
-                <Routes>
-                  {/* Public Routes */}
-                  <Route path="/login" element={<PublicRoute element={<Login />} />} />
-                  <Route path="/signup" element={<PublicRoute element={<Signup />} />} />
-                  <Route path="/verify-email/:token" element={<PublicRoute element={<VerifyEmail />} />} />
-                  <Route path="/forgot-password" element={<PublicRoute element={<ForgotPassword />} />} />
-                  <Route path="/reset-password/:token" element={<PublicRoute element={<ResetPassword />} />} />
-
-                  {/* Protected Routes */}
-                  <Route path="/dashboard" element={<PrivateRoute element={<Home />} />} />
-                  <Route path="/card/:id" element={<PrivateRoute element={<CardDetails />} />} />
-                  <Route path="/transactions" element={<PrivateRoute element={<Transactions />} />} />
-                  <Route path="/monthlyExpenseTxs" element={<PrivateRoute element={<MonthlyExpense />} />} />
-                  <Route path="/profile" element={<PrivateRoute element={<Profile />} />} />
-
-                  {/* Default redirect */}
-                  <Route path="*" element={<Navigate to="/dashboard" />} />
-                </Routes>
+                <NavigationHandler>
+                  {/* PWA Install Prompt */}
+                  <PWAInstallPrompt />
+                  {/* Offline Alert */}
+                  <OfflineAlert />
+                  {/* Update Alert */}
+                  <UpdateAlert />
+                </NavigationHandler>
               </main>
-              {/* PWA Install Prompt */}
-              <PWAInstallPrompt />
-              {/* Offline Alert */}
-              <OfflineAlert />
-              {/* Update Alert */}
-              <UpdateAlert />
             </div>
           </Router>
           {showTooltip && (

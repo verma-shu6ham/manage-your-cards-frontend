@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <defs>
+    <linearGradient id="gradBackground" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a1b1e" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#1a1b1e" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="gradBridge" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+    <linearGradient id="gradChar" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+    <linearGradient id="gradCard1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fca5a5"/>
+      <stop offset="100%" stop-color="#f87171"/>
+    </linearGradient>
+    <linearGradient id="gradCard2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a3e635"/>
+      <stop offset="100%" stop-color="#84cc16"/>
+    </linearGradient>
+    <linearGradient id="gradCard3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fcd34d"/>
+      <stop offset="100%" stop-color="#facc15"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="5" stdDeviation="10" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#gradBackground)"/>
+
+  <!-- Cloud shapes - but darker for dark theme -->
+  <ellipse cx="600" cy="100" rx="100" ry="40" fill="#2c2d32" opacity="0.3"/>
+  <ellipse cx="650" cy="80" rx="80" ry="30" fill="#2c2d32" opacity="0.3"/>
+  <ellipse cx="150" cy="150" rx="70" ry="20" fill="#2c2d32" opacity="0.3"/>
+  <ellipse cx="200" cy="130" rx="60" ry="25" fill="#2c2d32" opacity="0.3"/>
+
+  <!-- Bridge - representing "Setu" with glow effect -->
+  <path d="M100,400 Q400,250 700,400" stroke="url(#gradBridge)" stroke-width="15" fill="none" stroke-linecap="round" filter="url(#glow)"/>
+  
+  <!-- Supporting columns -->
+  <rect x="150" y="400" width="20" height="100" rx="5" fill="#6366f1" filter="url(#glow)"/>
+  <rect x="620" y="400" width="20" height="100" rx="5" fill="#3b82f6" filter="url(#glow)"/>
+
+  <!-- Bridge deck with slight curvature -->
+  <path d="M90,380 Q400,230 710,380" stroke="#2c2d32" stroke-width="30" fill="none" stroke-linecap="round" filter="url(#shadow)"/>
+  
+  <!-- Character -->
+  <g transform="translate(400, 310) scale(0.5)">
+    <!-- Body -->
+    <ellipse cx="0" cy="20" rx="60" ry="100" fill="url(#gradChar)" filter="url(#glow)"/>
+    
+    <!-- Head -->
+    <circle cx="0" cy="-100" r="50" fill="#2c2d32"/>
+    <circle cx="-15" cy="-110" r="7" fill="#e0e0e0"/>
+    <circle cx="15" cy="-110" r="7" fill="#e0e0e0"/>
+    <path d="M-15,-80 Q0,-70 15,-80" stroke="#e0e0e0" stroke-width="3" fill="none"/>
+    
+    <!-- Arms -->
+    <path d="M-50,-30 Q-100,-50 -140,-20" stroke="#6366f1" stroke-width="20" fill="none" stroke-linecap="round" filter="url(#glow)"/>
+    <path d="M50,-30 Q100,-50 140,-20" stroke="#3b82f6" stroke-width="20" fill="none" stroke-linecap="round" filter="url(#glow)"/>
+    
+    <!-- Legs -->
+    <path d="M-30,100 Q-30,160 -40,200" stroke="#6366f1" stroke-width="20" fill="none" stroke-linecap="round" filter="url(#glow)"/>
+    <path d="M30,100 Q30,160 40,200" stroke="#3b82f6" stroke-width="20" fill="none" stroke-linecap="round" filter="url(#glow)"/>
+  </g>
+  
+  <!-- Credit cards floating around the character -->
+  <rect x="550" y="200" width="120" height="80" rx="10" fill="url(#gradCard1)" filter="url(#shadow)" transform="rotate(15, 610, 240)"/>
+  <rect x="560" y="210" width="100" height="10" rx="5" fill="#e0e0e0" opacity="0.7" transform="rotate(15, 610, 240)"/>
+  <rect x="580" y="230" width="70" height="10" rx="5" fill="#e0e0e0" opacity="0.7" transform="rotate(15, 610, 240)"/>
+  
+  <rect x="180" y="180" width="120" height="80" rx="10" fill="url(#gradCard2)" filter="url(#shadow)" transform="rotate(-20, 240, 220)"/>
+  <rect x="190" y="190" width="100" height="10" rx="5" fill="#e0e0e0" opacity="0.7" transform="rotate(-20, 240, 220)"/>
+  <rect x="210" y="210" width="70" height="10" rx="5" fill="#e0e0e0" opacity="0.7" transform="rotate(-20, 240, 220)"/>
+  
+  <rect x="500" y="300" width="120" height="80" rx="10" fill="url(#gradCard3)" filter="url(#shadow)" transform="rotate(5, 560, 340)"/>
+  <rect x="510" y="310" width="100" height="10" rx="5" fill="#e0e0e0" opacity="0.7" transform="rotate(5, 560, 340)"/>
+  <rect x="530" y="330" width="70" height="10" rx="5" fill="#e0e0e0" opacity="0.7" transform="rotate(5, 560, 340)"/>
+  
+  <!-- Animated money icon -->
+  <g transform="translate(230, 300)">
+    <circle cx="0" cy="0" r="30" fill="#22c55e" filter="url(#glow)"/>
+    <text x="0" y="10" font-family="Arial" font-size="40" fill="#e0e0e0" text-anchor="middle">$</text>
+  </g>
+  
+  <!-- Bridge metaphor - data flow visualization -->
+  <g transform="translate(400, 400)">
+    <circle cx="-150" cy="0" r="5" fill="#6366f1">
+      <animate attributeName="cx" values="-150;150" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="-120" cy="0" r="5" fill="#3b82f6">
+      <animate attributeName="cx" values="-150;150" dur="3s" begin="0.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0" dur="3s" begin="0.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="-90" cy="0" r="5" fill="#6366f1">
+      <animate attributeName="cx" values="-150;150" dur="3s" begin="1s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0" dur="3s" begin="1s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="-60" cy="0" r="5" fill="#3b82f6">
+      <animate attributeName="cx" values="-150;150" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="-30" cy="0" r="5" fill="#6366f1">
+      <animate attributeName="cx" values="-150;150" dur="3s" begin="2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0" dur="3s" begin="2s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg>
