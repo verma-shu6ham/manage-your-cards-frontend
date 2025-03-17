@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext/AuthContext';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
+import PublicRoute from './components/PublicRoute/PublicRoute';
 import Navbar from './components/Navbar/Navbar';
 import Login from './pages/Auth/Login';
 import Signup from './pages/Auth/Signup';
@@ -35,11 +36,11 @@ function App() {
               <main className="main-content">
                 <Routes>
                   {/* Public Routes */}
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/signup" element={<Signup />} />
-                  <Route path="/verify-email/:token" element={<VerifyEmail />} />
-                  <Route path="/forgot-password" element={<ForgotPassword />} />
-                  <Route path="/reset-password/:token" element={<ResetPassword />} />
+                  <Route path="/login" element={<PublicRoute element={<Login />} />} />
+                  <Route path="/signup" element={<PublicRoute element={<Signup />} />} />
+                  <Route path="/verify-email/:token" element={<PublicRoute element={<VerifyEmail />} />} />
+                  <Route path="/forgot-password" element={<PublicRoute element={<ForgotPassword />} />} />
+                  <Route path="/reset-password/:token" element={<PublicRoute element={<ResetPassword />} />} />
 
                   {/* Protected Routes */}
                   <Route path="/dashboard" element={<PrivateRoute element={<Home />} />} />
