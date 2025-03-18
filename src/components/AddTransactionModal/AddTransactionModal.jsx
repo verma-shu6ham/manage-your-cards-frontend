@@ -24,6 +24,7 @@ const AddTransactionModal = ({ isOpen, onClose, preselectedCardId, onTransaction
     const [transactionTime, setTransactionTime] = useState(new Date().toISOString().split('T')[1]);
     const [isCash, setIsCash] = useState(false)
     const [paymentMethod, setPaymentMethod] = useState("")
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         if (isOpen) {
@@ -56,9 +57,11 @@ const AddTransactionModal = ({ isOpen, onClose, preselectedCardId, onTransaction
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true)
         if ((!isCash && !cardId) || !amount || !category || !transactionDate) {
             const formattedError = formatError("Please fill in all required fields.");
             setError(formattedError.message);
+            setLoading(false)
             return;
         }
         try {
@@ -88,6 +91,8 @@ const AddTransactionModal = ({ isOpen, onClose, preselectedCardId, onTransaction
         } catch (err) {
             const formattedError = formatError(err);
             setError(formattedError.message);
+        } finally {
+            setLoading(false)
         }
     };
 
@@ -272,11 +277,11 @@ const AddTransactionModal = ({ isOpen, onClose, preselectedCardId, onTransaction
 
 
                     <div className="modal-footer">
-                        <button type="button" className="reset-button" onClick={resetForm}>
+                        <button type="button" className="reset-button" onClick={resetForm} disabled={loading}>
                             Reset
                         </button>
-                        <button type="submit" className="apply-button">
-                            Add Transaction
+                        <button type="submit" className="apply-button" disabled={loading}>
+                            {loading ? 'Adding...' : 'Add Transaction'}
                         </button>
                     </div>
                 </form>

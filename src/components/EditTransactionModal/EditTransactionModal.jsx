@@ -24,6 +24,7 @@ const EditTransactionModal = ({ isOpen, onClose, transaction, onTransactionEdite
   });
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (transaction) {
@@ -98,12 +99,15 @@ const EditTransactionModal = ({ isOpen, onClose, transaction, onTransactionEdite
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true)
     try {
       await updateTransaction(transaction._id, formData);
       onTransactionEdited();
     } catch (err) {
       const formattedError = formatError(err);
       setError(formattedError.message);
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -209,11 +213,11 @@ const EditTransactionModal = ({ isOpen, onClose, transaction, onTransactionEdite
             </select>
           </div>
           <div className="modal-actions">
-            <button type="button" className="cancel-btn" onClick={onClose}>
+            <button type="button" className="cancel-btn" onClick={onClose} disabled={loading}>
               Cancel
             </button>
-            <button type="submit" className="submit-btn">
-              Save Changes
+            <button type="submit" className="submit-btn" disabled={loading}>
+              {loading ? 'Saving...' : 'Save Changes'}
             </button>
           </div>
         </form>

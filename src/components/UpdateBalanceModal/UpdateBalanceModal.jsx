@@ -11,11 +11,14 @@ import { withErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
 const UpdateBalanceModal = ({ cardId, isOpen, onClose, onFetchCardDetailsData }) => {
   const [realTimeAvailable, setRealTimeAvailable] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true)
     if (!realTimeAvailable) {
       setError("Please enter available credit.");
+      setLoading(false)
       return;
     }
     try {
@@ -23,6 +26,8 @@ const UpdateBalanceModal = ({ cardId, isOpen, onClose, onFetchCardDetailsData })
     } catch (err) {
       const formattedError = formatError(err);
       setError(formattedError.message);
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -71,11 +76,11 @@ const UpdateBalanceModal = ({ cardId, isOpen, onClose, onFetchCardDetailsData })
             />
           </div>
           <div className="modal-actions">
-            <button type="button" className="button secondary" onClick={onClose}>
+            <button type="button" className="button secondary" onClick={onClose} disabled={loading}>
               Cancel
             </button>
-            <button type="submit" className="button primary">
-              Update
+            <button type="submit" className="button primary" disabled={loading}>
+              {loading ? 'Updating...' : 'Update'}
             </button>
           </div>
         </form>

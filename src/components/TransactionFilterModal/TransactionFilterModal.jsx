@@ -20,6 +20,7 @@ function TransactionFilterModal({ isOpen, onClose, onApplyFilters, monthlyExpens
     paymentMethod: ""
   });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -79,6 +80,7 @@ function TransactionFilterModal({ isOpen, onClose, onApplyFilters, monthlyExpens
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true)
     onApplyFilters(filters);
     onClose();
   };
@@ -225,10 +227,12 @@ function TransactionFilterModal({ isOpen, onClose, onApplyFilters, monthlyExpens
               maxAmount: "",
               status: "",
               paymentMethod: monthlyExpenseTx ? "" : currentFilters.paymentMethod,
-            })}>
+            })} disabled={loading}>
               Reset
             </button>
-            <button type="submit" className="apply-button">Apply Filters</button>
+            <button type="submit" className="apply-button" disabled={loading}>
+              {loading ? 'Applying...' : 'Apply Filters'}
+            </button>
           </div>
         </form>
       </div>
