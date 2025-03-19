@@ -25,15 +25,18 @@ function Profile() {
   const [profileData, setProfileData] = useState(null)
   const [cards, setCards] = useState([])
 
-  const handleCurrencyChange = async(newLocale) => {
+  const handleCurrencyChange = async (newLocale) => {
+    setSubSectionLoading(false)
     try {
+      setSubSectionLoading(true)
       const data = await updateLocale(newLocale)
+      localStorage.setItem('locale', newLocale)
       setLocale(data.locale)
-      setLoading(false)
     } catch (err) {
       const formattedError = formatError(err);
       setError(formattedError.message)
-      setLoading(false)
+    } finally {
+      setSubSectionLoading(false)
     }
   }
 
@@ -204,20 +207,21 @@ function Profile() {
   const renderSettings = () => (
     <div className="tab-content">
       <h2>Settings</h2>
-      <div className="settings-group">
-        <label>Currency Display</label>
-        <select
-          className="settings-select"
-          value={locale}
-          onChange={(e) => handleCurrencyChange(e.target.value)}
-        >
-          {Object.entries(localeCurrencyMap).map(([loc, {country, currency}]) => (
-            <option key={loc} value={loc}>
-              {new Intl.DisplayNames([loc], { type: 'region' }).of(loc.split('-')[1])} ({currency})
-            </option>
-          ))}
-        </select>
-      </div>
+      {subSectionLoading ? <Loading /> :
+        <div className="settings-group">
+          <label>Currency Display</label>
+          <select
+            className="settings-select"
+            value={locale}
+            onChange={(e) => handleCurrencyChange(e.target.value)}
+          >
+            {Object.entries(localeCurrencyMap).map(([loc, { country, currency }]) => (
+              <option key={loc} value={loc}>
+                {new Intl.DisplayNames([loc], { type: 'region' }).of(loc.split('-')[1])} ({currency})
+              </option>
+            ))}
+          </select>
+        </div>}
       {profileData?.preferences && (
         <div className="settings-group">
           <label>Email Notifications</label>
@@ -341,7 +345,7 @@ function Profile() {
     <div className="tab-content">
       <h2>Cards</h2>
       {error && <p className="error-message">{error}</p>}
-      
+
       {subSectionLoading ? <Loading /> :
         <div className="delete-card-section">
           <p className="warning-text">

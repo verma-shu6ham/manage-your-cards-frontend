@@ -31,7 +31,7 @@ const AddTransactionModal = ({ isOpen, onClose, preselectedCardId, onTransaction
             fetchCards();
             fetchCategories();
             setCardId(preselectedCardId || "");
-            setTransactionDate(new Date().toISOString());
+            setTransactionDate(new Date());
         }
     }, [isOpen, preselectedCardId]);
 
@@ -119,13 +119,23 @@ const AddTransactionModal = ({ isOpen, onClose, preselectedCardId, onTransaction
     const handleDateChange = (e) => {
         const newDate = e.target.value;
         setTransactionDateOnly(newDate);
-        setTransactionDate(new Date(`${newDate}T${transactionTime}`).toISOString());
+        
+        // Create date in user's local timezone without UTC conversion
+        const localDate = new Date(`${newDate}T${transactionTime}`);
+        
+        // Convert to ISO string in the user's timezone context
+        setTransactionDate(localDate);
     };
 
     const handleTimeChange = (e) => {
         const newTime = e.target.value;
         setTransactionTime(newTime);
-        setTransactionDate(new Date(`${transactionDateOnly}T${newTime}`).toISOString());
+        
+        // Create date in user's local timezone without UTC conversion
+        const localDate = new Date(`${transactionDateOnly}T${newTime}`);
+        
+        // Set the actual date object so timezone information is preserved
+        setTransactionDate(localDate);
     };
 
     const resetForm = () => {
@@ -247,7 +257,7 @@ const AddTransactionModal = ({ isOpen, onClose, preselectedCardId, onTransaction
                             <input
                                 id="date"
                                 type="date"
-                                value={transactionDate && formatDateTime(locale, transactionDate, false, false).date}
+                                value={transactionDate && formatDateTime(locale, transactionDate, true, false).date}
                                 onChange={handleDateChange}
                                 required
                             />
@@ -257,7 +267,7 @@ const AddTransactionModal = ({ isOpen, onClose, preselectedCardId, onTransaction
                             <input
                                 id="time"
                                 type="time"
-                                value={transactionDate && formatDateTime(locale, transactionDate, false, false).time}
+                                value={transactionDate && formatDateTime(locale, transactionDate, true, false).time}
                                 onChange={handleTimeChange}
                                 required
                             />

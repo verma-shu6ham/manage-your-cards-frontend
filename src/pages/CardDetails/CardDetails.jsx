@@ -157,7 +157,7 @@ function CardDetails() {
         <div className="info-item">
           <label>
             Billing Cycle Spending
-            <InfoIcon message={`${TOOLTIP_MESSAGES.BILLING_CYCLE_SPENDING} Statement Date: ${formatDateTime(locale, card.currentStatementDate).date}`} label="Billing Cycle Spending" />
+            <InfoIcon message={`${TOOLTIP_MESSAGES.BILLING_CYCLE_SPENDING} Statement Date: ${formatDateTime(locale, card.currentStatementDate, false, true).date}`} label="Billing Cycle Spending" />
           </label>
           <p>{billingSpending?.monthlyTotal ? formatNumber(billingSpending.monthlyTotal, locale) : formatNumber(0, locale)}</p>
         </div>
@@ -174,10 +174,10 @@ function CardDetails() {
                     {transaction.type}
                   </span>
                   <span className="date">
-                    {formatDateTime(locale, transaction.transactionDate).date}
+                    {formatDateTime(locale, transaction.transactionDate, false, true).date}
                   </span>
                   <span className="time">
-                    {formatDateTime(locale, transaction.transactionDate).time}
+                    {formatDateTime(locale, transaction.transactionDate, false, true).time}
                   </span>
                 </div>
                 <div className="transaction-body">

@@ -33,7 +33,7 @@ const EditTransactionModal = ({ isOpen, onClose, transaction, onTransactionEdite
         amount: transaction.amount,
         category: transaction.category,
         subcategory: transaction.subcategory,
-        transactionDate: new Date(transaction.transactionDate).toISOString(),
+        transactionDate: new Date(transaction.transactionDate),
       });
 
     }
@@ -64,18 +64,26 @@ const EditTransactionModal = ({ isOpen, onClose, transaction, onTransactionEdite
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === 'date') {
-      const oldTime = formData.transactionDate.split('T')[1];
-      const newDate = new Date(`${value}T${oldTime}`).toISOString()
+      const oldTime = formData.transactionDate instanceof Date 
+        ? `${String(formData.transactionDate.getHours()).padStart(2, '0')}:${String(formData.transactionDate.getMinutes()).padStart(2, '0')}`
+        : formData.transactionDate.split('T')[1]?.split('.')[0] || '00:00';
+      
+      const localDate = new Date(`${value}T${oldTime}`);
+      
       setFormData(prev => ({
         ...prev,
-        'transactionDate': newDate
+        'transactionDate': localDate
       }));
     } else if (name === 'time') {
-      const oldDate = formData.transactionDate.split('T')[0];
-      const newDate = new Date(`${oldDate}T${value}`).toISOString()
+      const oldDate = formData.transactionDate instanceof Date
+        ? `${formData.transactionDate.getFullYear()}-${String(formData.transactionDate.getMonth() + 1).padStart(2, '0')}-${String(formData.transactionDate.getDate()).padStart(2, '0')}`
+        : formData.transactionDate.split('T')[0] || new Date().toISOString().split('T')[0];
+      
+      const localDate = new Date(`${oldDate}T${value}`);
+      
       setFormData(prev => ({
         ...prev,
-        'transactionDate': newDate
+        'transactionDate': localDate
       }));
     } else if (name === 'category') {
       setFormData(prev => ({
@@ -155,7 +163,7 @@ const EditTransactionModal = ({ isOpen, onClose, transaction, onTransactionEdite
                 type="date"
                 id="date"
                 name="date"
-                value={formData.transactionDate && formatDateTime(locale, formData.transactionDate, false, false).date}
+                value={formData.transactionDate && formatDateTime(locale, formData.transactionDate, true, false).date}
                 onChange={handleChange}
                 required
               />
@@ -166,7 +174,7 @@ const EditTransactionModal = ({ isOpen, onClose, transaction, onTransactionEdite
                 type="time"
                 id="time"
                 name="time"
-                value={formData.transactionDate && formatDateTime(locale, formData.transactionDate, false, false).time}
+                value={formData.transactionDate && formatDateTime(locale, formData.transactionDate, true, false).time}
                 onChange={handleChange}
                 required
               />

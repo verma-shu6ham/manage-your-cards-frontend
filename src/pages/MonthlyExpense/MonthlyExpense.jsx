@@ -117,7 +117,7 @@ function MonthlyExpense() {
               </thead>
               <tbody>
                 {transactions.map((transaction) => {
-                  const { date, time } = formatDateTime(locale, transaction.transactionDate);
+                  const { date, time } = formatDateTime(locale, transaction.transactionDate, false, true);
                   return (
                     <tr key={transaction._id}>
                       {transaction?.card?.cardName ? <td>{`${transaction.card.cardName} - ${transaction.card.lastFourDigits}`}</td> : <td>Cash</td>}

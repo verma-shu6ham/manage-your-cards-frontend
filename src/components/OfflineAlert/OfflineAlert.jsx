@@ -23,7 +23,7 @@ const OfflineAlert = () => {
 
     const handleOffline = () => {
       if (locale) {
-        const { date, time } = formatDateTime(locale, new Date().toISOString())
+        const { date, time } = formatDateTime(locale, new Date(), false, true);
         localStorage.setItem('lastOnlineTimestamp', `${date} ${time}`);
         setLastOnlineTime(`${date} ${time}`);
       }
