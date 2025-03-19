@@ -348,9 +348,9 @@ function Profile() {
 
       {subSectionLoading ? <Loading /> :
         <div className="delete-card-section">
-          <p className="warning-text">
+          {cards.length ?  <p className="warning-text">
             Warning:  Deleting your card will permanently remove it along with all associated transactions, which will affect the transaction records, monthly data and chats.
-          </p>
+          </p> : <p>No cards added yet.</p>}
           <div className="delete-cards-container">
             {cards.map((card, index) => (
               <li key={`${card._id}-${index}`} className="delete-card-item">
