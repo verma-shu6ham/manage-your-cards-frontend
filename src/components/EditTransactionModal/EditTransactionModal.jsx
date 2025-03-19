@@ -188,6 +188,7 @@ const EditTransactionModal = ({ isOpen, onClose, transaction, onTransactionEdite
               value={formData.category}
               onChange={handleChange}
               required
+              disabled={transaction.paymentMethod === 'cash'}
             >
 
               {categories.map(cat =>
