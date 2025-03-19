@@ -70,6 +70,29 @@
   font-size: 1rem;
 }
 
+.form-group input:disabled {
+  background: var(--hover-color);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  cursor: not-allowed;
+}
+
+.form-group select {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--input-background);
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+.form-group select:disabled {
+  background: var(--hover-color);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  cursor: not-allowed;
+}
+
 .modal-actions {
   display: flex;
   justify-content: flex-end;
@@ -101,4 +124,4 @@
   color: var(--danger-color);
   font-size: 0.9rem;
   margin-top: -8px;
-} 
+}

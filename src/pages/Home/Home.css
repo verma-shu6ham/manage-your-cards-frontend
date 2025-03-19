@@ -335,6 +335,35 @@
   color: var(--success-color);
 }
 
+.home-card-actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+}
+
+.card-action-btn {
+  background: var(--card-background);
+  color: var(--text-color);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  justify-content: center;
+}
+
+.card-action-btn:hover {
+  background: linear-gradient(135deg, var(--primary-color), var(--info-color));
+  color: white;
+  border-color: transparent;
+}
+
 .no-cards {
   text-align: center;
   color: var(--text-secondary);

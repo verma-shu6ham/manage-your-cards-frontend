@@ -3,11 +3,12 @@ import { useNavigate } from "react-router-dom"
 import { getAllCards } from "../../services/api"
 import Loading from "../../components/Loading/Loading"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowUp, faArrowDown, faPlusCircle, faMoneyBillWave } from '@fortawesome/free-solid-svg-icons'
-import { formatNumber } from "../../utils/mathUtils"
+import { faArrowUp, faArrowDown, faPlusCircle, faMoneyBillWave, faCreditCard } from '@fortawesome/free-solid-svg-icons'
+import { formatDateTime, formatNumber } from "../../utils/mathUtils"
 import { useAuth } from "../../contexts/AuthContext/AuthContext";
 import AddTransactionModal from "../../components/AddTransactionModal/AddTransactionModal";
 import AddCardModal from "../../components/AddCardModal/AddCardModal";
+import UpdateBalanceModal from "../../components/UpdateBalanceModal/UpdateBalanceModal";
 import { TOOLTIP_MESSAGES } from '../../constants/tooltipMessages';
 import InfoIcon from '../../components/InfoIcon/InfoIcon';
 import { formatError } from '../../utils/errorHandler';
@@ -27,6 +28,7 @@ function Home() {
   const navigate = useNavigate()
   const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
   const [isAddCardModalOpen, setIsAddCardModalOpen] = useState(false);
+  const [isUpdateBalanceModalOpen, setIsUpdateBalanceModalOpen] = useState(false);
 
   useEffect(() => {
     fetchCards()
@@ -92,6 +94,13 @@ function Home() {
         >
           <FontAwesomeIcon icon={faMoneyBillWave} className="icon" />
           Add Transaction
+        </button>
+        <button
+          className="add-btn"
+          onClick={() => setIsUpdateBalanceModalOpen(true)}
+        >
+          <FontAwesomeIcon icon={faCreditCard} className="icon" />
+          Real-time Available Credit
         </button>
       </header>
 
@@ -190,48 +199,69 @@ function Home() {
                 <p className="home-card-number">**** **** **** {card.lastFourDigits}</p>
                 <div className="home-card-details">
                   <div className="home-detail-row">
-                    <span className="home-detail-label">Credit Limit:
-
+                    <span className="home-detail-label">
+                      Credit Limit
+                      <InfoIcon message={TOOLTIP_MESSAGES.CREDIT_LIMIT} label="Credit Limit" />
                     </span>
                     <span className="home-detail-value">{formatNumber(card.creditLimit, locale)}</span>
                   </div>
                   <div className="home-detail-row">
-                    <span className="home-detail-label">Available Credit:
+                    <span className="home-detail-label">
+                      Available Credit
+                      <InfoIcon message={TOOLTIP_MESSAGES.AVAILABLE_CREDIT} label="Available Credit" />
                     </span>
-                    <span className="detail-value">{formatNumber(card.lastKnownAvailableCredit, locale)}</span>
+                    <span className="home-detail-value">{formatNumber(card.lastKnownAvailableCredit, locale)}</span>
                   </div>
                   <div className="home-detail-row">
-                    <span className="home-detail-label">Outstanding:
-
+                    <span className="home-detail-label">
+                      Outstanding
+                      <InfoIcon message={TOOLTIP_MESSAGES.OUTSTANDING} label="Outstanding" />
                     </span>
                     <span className="home-detail-value">{formatNumber(card.lastKnownOutstanding, locale)}</span>
                   </div>
                   <div className="home-detail-row">
-                    <span className="home-detail-label">Payment Difference:</span>
-                    <span className={`home-detail-value ${card.paymentDifference <= 0 ? 'negative' : 'positive'
-                      }`}>
+                    <span className="home-detail-label">
+                      Payment Difference
+                      <InfoIcon message={TOOLTIP_MESSAGES.PAYMENT_DIFFERENCE} label="Payment Difference" />
+                    </span>
+                    <span className={`home-detail-value ${card.paymentDifference <= 0 ? 'negative' : 'positive'}`}>
                       {formatNumber(card.paymentDifference < 0 ? card.paymentDifference * -1 : card.paymentDifference, locale)}
                     </span>
                   </div>
+                  {/* <div className="home-detail-row">
+                    <span className="home-detail-label">
+                      Next Statement
+                      <InfoIcon message={TOOLTIP_MESSAGES.NEXT_STATEMENT_DATE} label="Next Statement Date" />
+                    </span>
+                    <span className="home-detail-value">{card.nextStatementDate ? formatDateTime(locale, card.nextStatementDate, false, true).date : 'N/A'}</span>
+                  </div> */}
                 </div>
               </div>
             ))
           ) : (
-            <p className="no-cards">No cards found with current filters.</p>
+            <p className="no-cards-message">No cards found. Add a new card to get started.</p>
           )}
         </div>
       </div>
 
+      {/* Modals */}
       {isAddCardModalOpen && <AddCardModal
         isOpen={isAddCardModalOpen}
         onClose={() => setIsAddCardModalOpen(false)}
         onCardAdded={fetchCards}
       />}
-      
-      {isTransactionModalOpen  && <AddTransactionModal
+
+      {isTransactionModalOpen && <AddTransactionModal
         isOpen={isTransactionModalOpen}
         onClose={() => setIsTransactionModalOpen(false)}
         onTransactionAdded={fetchCards}
+      />}
+
+      {isUpdateBalanceModalOpen && <UpdateBalanceModal
+        isOpen={isUpdateBalanceModalOpen}
+        onClose={() => setIsUpdateBalanceModalOpen(false)}
+        onFetchCardsData={fetchCards}
+        cards={cards}
       />}
     </div>
   )

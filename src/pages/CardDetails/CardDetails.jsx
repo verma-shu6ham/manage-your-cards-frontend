@@ -225,10 +225,11 @@ function CardDetails() {
 
 
       {isUpdateModalOpen && <UpdateBalanceModal
-        cardId={id}
         isOpen={isUpdateModalOpen}
         onClose={() => setIsUpdateModalOpen(false)}
-        onFetchCardDetailsData={fetchCardDetailsData}
+        onFetchCardsData={fetchCardDetailsData}
+        cards={[card]}
+        preselectedCardId={id}
       />}
 
       {isEditModalOpen && <EditTransactionModal
