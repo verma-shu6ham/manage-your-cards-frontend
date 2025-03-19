@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { addCategory, deleteCategory, getUserCategories, getProfile, updateLocale, getAllCards, deleteCard, deleteAccount } from "../../services/api"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashAlt, faUser, faTrash, faCog, faListUl, faInfoCircle, faCreditCard } from "@fortawesome/free-solid-svg-icons";
+import { faTrashAlt, faUser, faTrash, faCog, faListUl, faInfoCircle, faCreditCard, faChevronDown, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import Loading from "../../components/Loading/Loading"
 import { useAuth } from "../../contexts/AuthContext/AuthContext"
 import { useNavigate } from "react-router-dom"
@@ -24,6 +24,7 @@ function Profile() {
   const [error, setError] = useState("")
   const [profileData, setProfileData] = useState(null)
   const [cards, setCards] = useState([])
+  const [expandedCategories, setExpandedCategories] = useState({})
 
   const handleCurrencyChange = async (newLocale) => {
     setSubSectionLoading(false)
@@ -176,6 +177,13 @@ function Profile() {
     }
   }
 
+  const toggleCategoryExpansion = (categoryId) => {
+    setExpandedCategories(prevState => ({
+      ...prevState,
+      [categoryId]: !prevState[categoryId]
+    }));
+  };
+
   const renderPersonalInfo = () => (
     <div className="tab-content">
       <h2>Personal Information</h2>
@@ -305,16 +313,33 @@ function Profile() {
                 <li key={`category-${cat._id}-${index}`} className="category-item">
                   <div className="category-header">
                     <span className="category-name">{cat.category}</span>
-                    <button
-                      className="delete-button"
-                      onClick={() => handleRemoveCategory(cat._id)}
-                      aria-label={`Delete category ${cat.category}`}
-                    >
-                      <FontAwesomeIcon icon={faTrashAlt} />
-                    </button>
+                    <div className="category-actions">
+                      {cat.isCustom && (
+                        <button
+                          className="delete-button"
+                          onClick={() => handleRemoveCategory(cat._id)}
+                          aria-label={`Delete category ${cat.category}`}
+                        >
+                          <FontAwesomeIcon icon={faTrashAlt} />
+                        </button>
+                      )}
+                      {cat.subcategories && cat.subcategories.length > 0 && (
+                        <button 
+                          className="accordion-toggle" 
+                          onClick={() => toggleCategoryExpansion(cat._id)}
+                          aria-expanded={expandedCategories[cat._id] ? "true" : "false"}
+                          aria-label={expandedCategories[cat._id] ? "Collapse category" : "Expand category"}
+                        >
+                          <FontAwesomeIcon 
+                            icon={expandedCategories[cat._id] ? faChevronDown : faChevronRight} 
+                            className="accordion-icon" 
+                          />
+                        </button>
+                      )}
+                    </div>
                   </div>
 
-                  {cat.subcategories && cat.subcategories.length > 0 && (
+                  {cat.subcategories && cat.subcategories.length > 0 && expandedCategories[cat._id] && (
                     <ul className="subcategories-list">
                       {cat.subcategories.map((sub, index) => (
                         <li
