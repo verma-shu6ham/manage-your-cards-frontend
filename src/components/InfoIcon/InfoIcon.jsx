@@ -7,7 +7,11 @@ import { TooltipContext } from '../../contexts/TooltipContext';
 const InfoIcon = ({ message, label }) => {
   const [setTooltipContent, setShowTooltip] = useContext(TooltipContext);
 
-  const handleTooltipTrigger = () => {
+  const handleTooltipTrigger = (e) => {
+    // Stop event propagation to prevent card navigation when icon is clicked
+    if (e) {
+      e.stopPropagation();
+    }
     setTooltipContent(message);
     setShowTooltip(true);
   };
@@ -19,6 +23,7 @@ const InfoIcon = ({ message, label }) => {
       tabIndex={0}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
+          e.stopPropagation(); // Stop propagation for keyboard events too
           handleTooltipTrigger();
         }
       }}
@@ -35,4 +40,4 @@ InfoIcon.propTypes = {
   label: PropTypes.string.isRequired
 };
 
-export default InfoIcon; 
+export default InfoIcon;
