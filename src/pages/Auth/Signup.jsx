@@ -16,6 +16,7 @@ function Signup() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [passwordMismatch, setPasswordMismatch] = useState(false);
+  const [invalidCountry, setInvalidCountry] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [signupSuccess, setSignupSuccess] = useState(false);
@@ -45,6 +46,13 @@ function Signup() {
     }
   }, [password, confirmPassword]);
 
+  useEffect(() => {
+    if (locale.includes('-')) {
+      setInvalidCountry(false);
+      setError("");
+    }
+  }, [locale]);
+
   const handleSelectChange = (locale) => {
     setInputValue(`${localeCurrencyMap[locale].country} (${localeCurrencyMap[locale].currency})`)
     setLocale(locale);
@@ -65,15 +73,25 @@ function Signup() {
     e.preventDefault();
     try {
       setLoading(true);
+      if (passwordMismatch) {
+        throw new Error("Passwords do not match");
+      }
+      let finalLocale = locale;
+      if (filteredOptions.length === 1 && inputValue && !locale.includes('-')) {
+        finalLocale = filteredOptions[0][0];
+        setInvalidCountry(false);
+      } else if ((filteredOptions.length === 0 || filteredOptions.length > 1) && !locale.includes('-')) {
+        setInvalidCountry(true);
+        throw new Error("Invalid country or Select one country");
+      }
       setError("");
-      const response = await signup(name, email, locale, password);
-      setLoading(false);
+      const response = await signup(name, email, finalLocale, password);
       setSignupSuccess(true);
-      // Don't navigate immediately, show success message first
     } catch (err) {
-      setLoading(false);
       const formattedError = formatError(err);
       setError(formattedError.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -95,7 +113,7 @@ function Signup() {
       <h2>Sign Up</h2>
 
       {error && <p className="error">{error}</p>}
-      
+
       {signupSuccess ? (
         <div className="verification-status success">
           <h3>Account Created Successfully!</h3>
@@ -105,7 +123,7 @@ function Signup() {
           <p className="verification-note">
             If you don't see the email, please check your spam folder.
           </p>
-          <button 
+          <button
             className="auth-button"
             onClick={() => navigate("/login")}
             style={{ marginTop: "20px" }}
@@ -126,6 +144,7 @@ function Signup() {
           <span className="label-input country-dropdown">
             <label htmlFor="country">Country</label>
             <input
+              className={`label-input ${invalidCountry ? "mismatch" : ""}`}
               type="text"
               value={inputValue}
               onChange={handleInputChange}
@@ -189,7 +208,7 @@ function Signup() {
           </button>
         </form>
       )}
-      
+
       {!signupSuccess && (
         <p>
           Already have an account? <Link to="/login">Log in</Link>
