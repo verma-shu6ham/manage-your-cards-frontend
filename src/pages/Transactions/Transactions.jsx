@@ -22,7 +22,7 @@ function Transactions() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
-  const [currentFilters, setCurrentFilters] = useState({ paymentMethod: "credit_card"});
+  const [currentFilters, setCurrentFilters] = useState({ paymentMethod: "credit_card" });
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -99,6 +99,10 @@ function Transactions() {
           </button>
         </div>
 
+        <section className="charts-section">
+          <TransactionCharts filters={currentFilters} />
+        </section>
+        
         <div className="table-container">
           <div className="table-scroll">
             <table className="transactions-table">
@@ -170,9 +174,6 @@ function Transactions() {
           </div>
         </div>
 
-        <section className="charts-section">
-          <TransactionCharts filters={currentFilters} />
-        </section>
 
         {isFilterModalOpen && <TransactionFilterModal
           isOpen={isFilterModalOpen}

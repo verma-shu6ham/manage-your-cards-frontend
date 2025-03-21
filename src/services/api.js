@@ -249,11 +249,10 @@ export const getBillingSpending = async (params) => {
       return acc;
     }, {});
     cleanParams.spendingType = 'billing';
-
-    const response = await api.get("/transactions/monthly-spending", {
+    const response = await api.get("/transactions/billing-spending", {
       params: cleanParams
     });
-    return response.data.monthlySummary[0];
+    return response.data.totalSpending;
   } catch (err) {
     throw handleApiError(err, {
       message: "Failed to fetch billing spending data. Please try again later."

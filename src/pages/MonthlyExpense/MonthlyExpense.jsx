@@ -89,7 +89,7 @@ function MonthlyExpense() {
     <div className="transactions-container">
       <main className="transactions-content">
         <div className="transactions-header">
-          <h1 className="page-title">Monthly Expense Transactions</h1>
+          <h1 className="page-title">Monthly Expense</h1>
           <button
             className="filter-button"
             onClick={() => setIsFilterModalOpen(true)}
@@ -100,6 +100,10 @@ function MonthlyExpense() {
           </button>
         </div>
 
+        <section className="charts-section">
+          <TransactionCharts filters={currentFilters} />
+        </section>
+        
         <div className="table-container">
           <div className="table-scroll">
             <table className="transactions-table">
@@ -171,9 +175,6 @@ function MonthlyExpense() {
           </div>
         </div>
 
-        <section className="charts-section">
-          <TransactionCharts filters={currentFilters} />
-        </section>
 
         {isFilterModalOpen && <TransactionFilterModal
           isOpen={isFilterModalOpen}

@@ -159,7 +159,7 @@ function CardDetails() {
             Billing Cycle Spending
             <InfoIcon message={`${TOOLTIP_MESSAGES.BILLING_CYCLE_SPENDING} Statement Date: ${formatDateTime(locale, card.currentStatementDate, false, true).date}`} label="Billing Cycle Spending" />
           </label>
-          <p>{billingSpending?.monthlyTotal ? formatNumber(billingSpending.monthlyTotal, locale) : formatNumber(0, locale)}</p>
+          <p>{billingSpending ? formatNumber(billingSpending, locale) : formatNumber(0, locale)}</p>
         </div>
       </div>
 
