@@ -19,6 +19,7 @@ function Footer() {
         </div>
         <div className="future-ready">
           <p>👉 We're constantly improving! If you need a feature, let us know.</p>
+          <a href="mailto:support@creditsetu.in">support@creditsetu.in</a>
         </div>
       </div>
     </footer>

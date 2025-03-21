@@ -105,6 +105,12 @@ const Navbar = () => {
             )}
           </div>
 
+          {/* Improvement Message - Desktop */}
+          <div className="navbar-improvement-message">
+            <p> We're constantly improving! If you need a feature, let us know.</p>
+            <a href="mailto:support@creditsetu.in">support@creditsetu.in</a>
+          </div>
+
           {/* Mobile Menu Button */}
           <div className="navbar-mobile-controls">
             <button className="navbar-theme-toggle" onClick={toggleTheme}>
@@ -162,6 +168,12 @@ const Navbar = () => {
               <Link to="/signup" className="navbar-sidebar-link navbar-signup-btn" onClick={handleOptionSelect}>Get Started</Link>
             </>
           )}
+          
+          {/* Improvement Message - Mobile */}
+          <div className="navbar-sidebar-improvement">
+            <p> We're constantly improving! If you need a feature, let us know.</p>
+            <a href="mailto:support@creditsetu.in">support@creditsetu.in</a>
+          </div>
         </div>
       </div>
     </>

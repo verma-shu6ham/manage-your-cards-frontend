@@ -185,6 +185,64 @@
   margin-top: 1rem;
 }
 
+/* Improvement Message - Desktop */
+.navbar-improvement-message {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(59, 130, 246, 0.1));
+  padding: 8px 15px;
+  border-radius: 8px;
+  text-align: center;
+  margin-left: 1rem;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.navbar-improvement-message p {
+  color: var(--text-color);
+  font-size: 0.8rem;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.navbar-improvement-message a {
+  color: var(--primary-color);
+  font-size: 0.8rem;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.navbar-improvement-message a:hover {
+  text-decoration: underline;
+}
+
+/* Improvement Message - Mobile */
+.navbar-sidebar-improvement {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(59, 130, 246, 0.1));
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  margin-top: 2rem;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.navbar-sidebar-improvement p {
+  color: var(--text-color);
+  font-size: 0.9rem;
+  margin: 0 0 8px 0;
+}
+
+.navbar-sidebar-improvement a {
+  color: var(--primary-color);
+  font-size: 0.9rem;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.navbar-sidebar-improvement a:hover {
+  text-decoration: underline;
+}
+
 /* Responsive Styles */
 @media (max-width: 768px) {
   .navbar-wrapper {
@@ -199,7 +257,23 @@
     display: flex;
   }
 
+  .navbar-improvement-message {
+    display: none;
+  }
+
   .navbar-dropdown-content{
     position: relative;
+  }
+}
+
+/* For medium screens - adjust improvement message */
+@media (max-width: 1100px) and (min-width: 769px) {
+  .navbar-improvement-message {
+    max-width: 200px;
+  }
+  
+  .navbar-improvement-message p {
+    font-size: 0.75rem;
+    white-space: normal;
   }
 }
