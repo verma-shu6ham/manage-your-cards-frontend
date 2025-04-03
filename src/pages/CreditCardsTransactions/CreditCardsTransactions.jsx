@@ -13,20 +13,19 @@ import EditTransactionModal from "../../components/EditTransactionModal/EditTran
 import { formatError } from '../../utils/errorHandler';
 import { withErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary'
 
-import "./Transactions.css";
+import "./CreditCardsTransactions.css";
 
-function Transactions() {
+function CreditCardsTransactions() {
   const { user, locale } = useAuth();
   const navigate = useNavigate();
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
-  const [currentFilters, setCurrentFilters] = useState();
+  const [currentFilters, setCurrentFilters] = useState({ paymentMethod: "credit_card" });
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-
   useEffect(() => {
     if (!user) {
       navigate("/login");
@@ -39,6 +38,7 @@ function Transactions() {
     setLoading(true);
     try {
       const fetchedTransactions = await getTransactions(filters);
+      console.log(fetchedTransactions.transactions);
       setTransactions(fetchedTransactions.transactions);
     } catch (error) {
       const formattedError = formatError(error);
@@ -88,7 +88,7 @@ function Transactions() {
     <div className="transactions-container">
       <main className="transactions-content">
         <div className="transactions-header">
-          <h1 className="page-title">Transactions</h1>
+          <h1 className="page-title">Credit Card Transactions</h1>
           <button
             className="filter-button"
             onClick={() => setIsFilterModalOpen(true)}
@@ -100,7 +100,7 @@ function Transactions() {
         </div>
 
         <section className="charts-section">
-          <TransactionCharts filters={currentFilters} />
+          <TransactionCharts filters={currentFilters} isCardView={true} />
         </section>
         
         <div className="table-container">
@@ -108,7 +108,7 @@ function Transactions() {
             <table className="transactions-table">
               <thead>
                 <tr>
-                  <th>Cash / Card</th>
+                  <th>BANK - Card</th>
                   <th>Date</th>
                   <th>Time</th>
                   <th>Amount</th>
@@ -123,7 +123,7 @@ function Transactions() {
                   const { date, time } = formatDateTime(locale, transaction.transactionDate, false, true);
                   return (
                     <tr key={transaction._id}>
-                      {transaction?.card?.cardName ? <td>{`${transaction.card.cardName} - ${transaction.card.lastFourDigits}`}</td> : <td>Cash</td>}
+                      <td>{`${transaction.card.cardName} - ${transaction.card.lastFourDigits}`}</td>
                       <td className="date-cell">{date}</td>
                       <td className="time-cell">{time}</td>
                       <td className={`transaction-amount ${transaction.type === 'debit' ? 'debit' : 'credit'}`}>
@@ -196,4 +196,4 @@ function Transactions() {
   );
 }
 
-export default withErrorBoundary(Transactions);
+export default withErrorBoundary(CreditCardsTransactions);

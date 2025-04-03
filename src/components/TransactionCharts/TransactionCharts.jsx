@@ -13,7 +13,7 @@ import {
   BarController
 } from 'chart.js';
 import { Bar, Line, Pie } from 'react-chartjs-2';
-import { getMonthlySpending, getSpendingSummary } from '../../services/api';
+import { getMonthlySpending } from '../../services/api';
 import { formatNumber } from '../../utils/mathUtils';
 import { useAuth } from '../../contexts/AuthContext/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext/ThemeContext';
@@ -54,7 +54,8 @@ const TransactionCharts = ({ filters }) => {
   });
 
   // Determine if we're in the Monthly Expense view
-  const isMonthlyExpenseView = filters && filters.category === "Monthly Expense";
+  const isMonthlyExpenseView = filters && filters.category === "Monthly Expense" && filters.paymentMethod === "cash";
+  const isTransactionsView = filters?.paymentMethod ? false : true;
 
   const months = [
     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -149,7 +150,7 @@ const TransactionCharts = ({ filters }) => {
           }
         },
         tooltip: {
-          titleColor: theme === 'dark' ?  '#333' :'#f0f0f0',
+          titleColor: theme === 'dark' ? '#333' : '#f0f0f0',
           bodyColor: theme === 'dark' ? '#333' : '#f0f0f0',
           backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.9)' : 'rgba(50, 50, 50, 0.9)',
           borderColor: theme === 'dark' ? 'rgba(200, 200, 200, 1)' : 'rgba(70, 70, 70, 1)',
@@ -199,7 +200,7 @@ const TransactionCharts = ({ filters }) => {
           }
         },
         tooltip: {
-          titleColor: theme === 'dark' ?  '#333' :'#f0f0f0',
+          titleColor: theme === 'dark' ? '#333' : '#f0f0f0',
           bodyColor: theme === 'dark' ? '#333' : '#f0f0f0',
           backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.9)' : 'rgba(50, 50, 50, 0.9)',
           borderColor: theme === 'dark' ? 'rgba(200, 200, 200, 1)' : 'rgba(70, 70, 70, 1)',
@@ -283,7 +284,7 @@ const TransactionCharts = ({ filters }) => {
           }
         },
         tooltip: {
-          titleColor: theme === 'dark' ?  '#333' :'#f0f0f0',
+          titleColor: theme === 'dark' ? '#333' : '#f0f0f0',
           bodyColor: theme === 'dark' ? '#333' : '#f0f0f0',
           backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.9)' : 'rgba(50, 50, 50, 0.9)',
           borderColor: theme === 'dark' ? 'rgba(200, 200, 200, 1)' : 'rgba(70, 70, 70, 1)',
@@ -392,7 +393,7 @@ const TransactionCharts = ({ filters }) => {
     }
 
     // Handle Monthly Expense view differently
-    if (isMonthlyExpenseView) {
+    if (isMonthlyExpenseView || isTransactionsView) {
       // For Monthly Expense view, use the legacy approach since it has different data structure
       const cardTotal = {
         _id: 'Card',
@@ -709,7 +710,7 @@ const TransactionCharts = ({ filters }) => {
       </div>
 
       <div className="chart-row">
-        {!isMonthlyExpenseView && (
+        {(!isMonthlyExpenseView || isTransactionsView) && (
           <div className="chart-card">
             <h3>Spending by Category</h3>
             <div className="chart-wrapper">
@@ -718,7 +719,7 @@ const TransactionCharts = ({ filters }) => {
           </div>
         )}
 
-        {isMonthlyExpenseView && (
+        {(isMonthlyExpenseView || isTransactionsView) && (
           <div className="chart-card">
             <h3>Spending by Payment Method</h3>
             <div className="chart-wrapper">

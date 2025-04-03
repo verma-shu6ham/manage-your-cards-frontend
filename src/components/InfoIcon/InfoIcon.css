@@ -5,7 +5,8 @@
   cursor: pointer;
   color: var(--text-secondary);
   transition: color 0.2s ease;
-}
+  z-index: 1002;
+  }
 
 .info-icon:hover {
   color: var(--primary-color);

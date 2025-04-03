@@ -12,6 +12,7 @@ import ResetPassword from './pages/Auth/ResetPassword';
 import Home from './pages/Home/Home';
 import CardDetails from './pages/CardDetails/CardDetails';
 import Transactions from './pages/Transactions/Transactions';
+import CreditCardsTransactions from './pages/CreditCardsTransactions/CreditCardsTransactions';
 import Profile from './pages/Profile/Profile';
 import MonthlyExpense from './pages/MonthlyExpense/MonthlyExpense';
 import PWAInstallPrompt from './components/PWAInstallPrompt/PWAInstallPrompt';
@@ -46,6 +47,7 @@ const NavigationHandler = ({ children }) => {
         <Route path="/card/:id" element={<PrivateRoute element={<CardDetails setShowNavbar={() => setShowNavbar(true)} />} />} />
         <Route path="/transactions" element={<PrivateRoute element={<Transactions setShowNavbar={() => setShowNavbar(true)} />} />} />
         <Route path="/monthlyExpenseTxs" element={<PrivateRoute element={<MonthlyExpense setShowNavbar={() => setShowNavbar(true)} />} />} />
+        <Route path="/creditCardsTransactions" element={<PrivateRoute element={<CreditCardsTransactions setShowNavbar={() => setShowNavbar(true)} />} />} />
         <Route path="/profile" element={<PrivateRoute element={<Profile setShowNavbar={() => setShowNavbar(true)} />} />} />
 
         {/* Default redirect */}

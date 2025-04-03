@@ -101,7 +101,7 @@ function MonthlyExpense() {
         </div>
 
         <section className="charts-section">
-          <TransactionCharts filters={currentFilters} />
+          <TransactionCharts filters={currentFilters} isCardView={false} />
         </section>
         
         <div className="table-container">

@@ -108,14 +108,6 @@ const AddTransactionModal = ({ isOpen, onClose, preselectedCardId, onTransaction
         }
     }
 
-    useEffect(() => {
-        if (isCash) {
-            setCategory("Monthly Expense")
-        } else {
-            setCategory("")
-        }
-    }, [isCash])
-
     const handleDateChange = (e) => {
         const newDate = e.target.value;
         setTransactionDateOnly(newDate);
@@ -177,7 +169,7 @@ const AddTransactionModal = ({ isOpen, onClose, preselectedCardId, onTransaction
                                 required
                             >
                                 <option value="">Select a payment method</option>
-                                <option value="cash">Cash</option>
+                                <option value="cash">Cash / UPI / Debit</option>
                                 {cards.map((card) => (
                                     <option key={card._id} value={card._id}>
                                         {card.cardName}
@@ -219,10 +211,9 @@ const AddTransactionModal = ({ isOpen, onClose, preselectedCardId, onTransaction
                             id="category"
                             value={category}
                             onChange={(e) => setCategory(e.target.value)}
-                            required={!isCash}
-                            disabled={isCash}
+                            required
                         >
-                            {isCash ? <option value="Monthly Expense">Monthly Expense</option> : <option value="">Select a category</option>}
+                            <option value="">Select a category</option>
                             {categories.map((cat) => (
                                 <option key={cat.category} value={cat.category}>
                                     {cat.category}

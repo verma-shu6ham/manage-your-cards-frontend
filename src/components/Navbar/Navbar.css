@@ -90,7 +90,7 @@
   box-shadow: 0 4px 6px var(--shadow-color);
   border-radius: 8px;
   z-index: 1000;
-  min-width: 200px;
+  min-width: 210px;
 }
 
 .navbar-dropdown-item.navbar-open .navbar-dropdown-content,

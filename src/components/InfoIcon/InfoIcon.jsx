@@ -10,6 +10,7 @@ const InfoIcon = ({ message, label }) => {
   const handleTooltipTrigger = (e) => {
     // Stop event propagation to prevent card navigation when icon is clicked
     if (e) {
+      e.preventDefault()
       e.stopPropagation();
     }
     setTooltipContent(message);

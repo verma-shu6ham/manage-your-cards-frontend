@@ -15,10 +15,13 @@ import {
   faSun,
   faMoon,
   faUser,
-  faSignOutAlt
+  faSignOutAlt,
+  faChartBar
 } from '@fortawesome/free-solid-svg-icons';
 import "./Navbar.css"
 import { withErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
+import InfoIcon from '../InfoIcon/InfoIcon';
+import { TOOLTIP_MESSAGES } from '../../constants/tooltipMessages';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -65,17 +68,24 @@ const Navbar = () => {
                 </Link>
                 <div className={`navbar-dropdown-item ${isTransactionsOpen ? 'navbar-open' : ''}`} onClick={toggleTransactionsDropdown}>
                   <span className="navbar-link">
-                    <FontAwesomeIcon icon={faExchangeAlt} className="navbar-icon" />
-                    Transactions
+                    <FontAwesomeIcon icon={faChartBar} className="navbar-icon" />
+                    Reports
                   </span>
                   <div className={`navbar-dropdown-content ${isTransactionsOpen ? 'navbar-show' : ''}`} onClick={(e) => e.stopPropagation()}>
                     <Link to="/transactions" className="navbar-dropdown-link" onClick={handleOptionSelect}>
-                      <FontAwesomeIcon icon={faCreditCard} className="navbar-icon" />
-                      All Cards
+                      <FontAwesomeIcon icon={faExchangeAlt} className="navbar-icon" />
+                      Transactions
+                      <InfoIcon message={TOOLTIP_MESSAGES.REPORTS_TRANSACTIONS} label="All  Transactions" />
                     </Link>
                     <Link to="/monthlyExpenseTxs" className="navbar-dropdown-link" onClick={handleOptionSelect}>
                       <FontAwesomeIcon icon={faCalendarAlt} className="navbar-icon" />
                       Monthly Expense
+                      <InfoIcon message={TOOLTIP_MESSAGES.REPORTS_MONTHLY_EXPENSE} label="Monthly Expense Transactions" />
+                    </Link>
+                    <Link to="/creditCardsTransactions" className="navbar-dropdown-link" onClick={handleOptionSelect}>
+                      <FontAwesomeIcon icon={faCreditCard} className="navbar-icon" />
+                      Credit Cards
+                      <InfoIcon message={TOOLTIP_MESSAGES.REPORTS_CARDS} label="Credit Cards Transactions" />
                     </Link>
                   </div>
                 </div>
@@ -139,17 +149,24 @@ const Navbar = () => {
               </Link>
               <div className={`navbar-sidebar-dropdown ${isTransactionsOpen ? 'navbar-open' : ''}`} onClick={toggleTransactionsDropdown}>
                 <span className="navbar-sidebar-link">
-                  <FontAwesomeIcon icon={faExchangeAlt} className="navbar-sidebar-icon" />
-                  Transactions
+                  <FontAwesomeIcon icon={faChartBar} className="navbar-sidebar-icon" />
+                  Reports
                 </span>
                 <div className={`navbar-sidebar-dropdown-content ${isTransactionsOpen ? 'navbar-show' : ''}`}>
                   <Link to="/transactions" className="navbar-sidebar-link navbar-submenu" onClick={handleOptionSelect}>
-                    <FontAwesomeIcon icon={faCreditCard} className="navbar-sidebar-icon" />
-                    All Cards
+                    <FontAwesomeIcon icon={faExchangeAlt} className="navbar-sidebar-icon" />
+                    Transactions
+                    <InfoIcon message={TOOLTIP_MESSAGES.REPORTS_TRANSACTIONS} label="All  Transactions" />
                   </Link>
                   <Link to="/monthlyExpenseTxs" className="navbar-sidebar-link navbar-submenu" onClick={handleOptionSelect}>
                     <FontAwesomeIcon icon={faCalendarAlt} className="navbar-sidebar-icon" />
                     Monthly Expense
+                    <InfoIcon message={TOOLTIP_MESSAGES.REPORTS_MONTHLY_EXPENSE} label="Monthly Expense Transactions" />
+                  </Link>
+                  <Link to="/creditCardsTransactions" className="navbar-sidebar-link navbar-submenu" onClick={handleOptionSelect}>
+                    <FontAwesomeIcon icon={faCreditCard} className="navbar-sidebar-icon" />
+                    Credit Cards
+                    <InfoIcon message={TOOLTIP_MESSAGES.REPORTS_CARDS} label="Credit Cards Transactions" />
                   </Link>
                 </div>
               </div>
@@ -168,7 +185,7 @@ const Navbar = () => {
               <Link to="/signup" className="navbar-sidebar-link navbar-signup-btn" onClick={handleOptionSelect}>Get Started</Link>
             </>
           )}
-          
+
           {/* Improvement Message - Mobile */}
           <div className="navbar-sidebar-improvement">
             <p> We're constantly improving! If you need a feature, let us know.</p>

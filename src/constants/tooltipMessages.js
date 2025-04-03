@@ -12,5 +12,8 @@ export const TOOLTIP_MESSAGES = {
   PAYMENT_DIFFERENCE: `The difference between Real-time Outstanding and Outstanding, indicating any unrecorded payments or new charges.
     If positive(+), it means additional payment is required.
     If negative(-), it indicates extra has been paid on the card.`,
-  BILLING_CYCLE_SPENDING: "The total amount spent on the credit card during the current billing cycle, including purchases, fees, and interest charges. As per recorder transactions."
+  BILLING_CYCLE_SPENDING: "The total amount spent on the credit card during the current billing cycle, including purchases, fees, and interest charges. As per recorder transactions.",
+  REPORTS_TRANSACTIONS: "A report of all transactions in the system, including cash, UPI, debit, and credit card transactions.",
+  REPORTS_MONTHLY_EXPENSE: "A report of transactions categorized as monthly expenses.",
+  REPORTS_CARDS: "A report of all credit cards transactions only."
 }
