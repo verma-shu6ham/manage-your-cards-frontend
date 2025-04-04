@@ -14,13 +14,14 @@ import {
 } from 'chart.js';
 import { Bar, Line, Pie } from 'react-chartjs-2';
 import { getMonthlySpending } from '../../services/api';
-import { formatNumber } from '../../utils/mathUtils';
+import { formatNumber, generateRandomColor } from '../../utils/mathUtils';
 import { useAuth } from '../../contexts/AuthContext/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext/ThemeContext';
-import './TransactionCharts.css';
 import PropTypes from 'prop-types';
 import { formatError } from '../../utils/errorHandler';
 import { withErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
+
+import './TransactionCharts.css';
 
 ChartJS.register(
   CategoryScale,
@@ -494,11 +495,7 @@ const TransactionCharts = ({ filters }) => {
           'rgba(54, 162, 235, 0.8)',
           'rgba(75, 192, 192, 0.8)',
         ],
-        borderColor: [
-          'rgba(54, 162, 235, 1)',
-          'rgba(75, 192, 192, 1)',
-        ],
-        borderWidth: 1,
+        borderColor: theme === 'dark' ? 'rgba(200, 200, 200, 1)' : 'rgba(70, 70, 70, 1)',
       },
     ],
   };
@@ -537,9 +534,9 @@ const TransactionCharts = ({ filters }) => {
       label: 'Total Spending by Category',
       data: getCategoryData().map(item => Math.abs(item.total)),
       backgroundColor: getCategoryData().map((_, index) =>
-        `hsla(${(index * 360) / getCategoryData().length}, 70%, 50%, 0.8)`
+        generateRandomColor()
       ),
-      borderWidth: 1,
+      borderColor: theme === 'dark' ? 'rgba(200, 200, 200, 1)' : 'rgba(70, 70, 70, 1)',
     }]
   };
 
@@ -638,9 +635,9 @@ const TransactionCharts = ({ filters }) => {
       backgroundColor: filteredSubcategories.flatMap(category =>
         category.subcategories
           .filter(sub => sub.subcategory)
-          .map((_, index) => `hsla(${Math.random() * 360}, 70%, 50%, 0.8)`)
+          .map((_, index) => generateRandomColor())
       ),
-      borderWidth: 1,
+      borderColor: theme === 'dark' ? 'rgba(200, 200, 200, 1)' : 'rgba(70, 70, 70, 1)',
     }]
   };
 

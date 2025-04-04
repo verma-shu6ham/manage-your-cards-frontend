@@ -9,6 +9,21 @@ export const onlyPositiveValue = (value, setter) => {
   }
 }
 
+
+export const generateRandomColor = () => {
+  // Random Hue (0 - 360 degrees)
+  const hue = Math.floor(Math.random() * 360);
+
+  // Random Saturation (60% to 90% for vibrant colors)
+  const saturation = Math.floor(60 + Math.random() * 30);
+
+  // Random Lightness (45% to 55% for balanced lightness, avoiding extremes)
+  const lightness = Math.floor(45 + Math.random() * 10);
+
+  // Return color as HSL string
+  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+};  
+
 export function formatNumber(number, locale, minFrac = 2, maxFrac = 2, currency = '') {
   return number.toLocaleString(locale, {
     style: 'currency',
