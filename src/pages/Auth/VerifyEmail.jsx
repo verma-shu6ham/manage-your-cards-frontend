@@ -30,7 +30,8 @@ function VerifyEmail() {
         const data = await verifyEmail(token);
         if (data && data.token) {
           localStorage.setItem('token', data.token);
-          setUser({token: data.token, ...data.user});
+          localStorage.setItem('userId', data?.user?.id);
+          setUser({token: data.token, userId: data?.user?.id});
           localStorage.setItem('locale', data.user.locale);
           setLocale(data.user.locale);
           setStatus("success");

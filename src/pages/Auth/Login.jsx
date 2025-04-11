@@ -13,7 +13,7 @@ function Login() {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
-  const { setUser, setLocale } = useAuth()  
+  const { setUser, setLocale } = useAuth()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -23,7 +23,8 @@ function Login() {
       const data = await login(email, password)
       if (data && data.user) {
         localStorage.setItem('token', data.token)
-        setUser({token: data.token, ...data.user})
+        localStorage.setItem('userId', data?.user?.id)
+        setUser({ token: data.token, userId: data?.user?.id })
         localStorage.setItem('locale', data.user.locale)
         setLocale(data.user.locale)
         navigate("/dashboard")
@@ -42,7 +43,7 @@ function Login() {
       <h2>Welcome Back</h2>
 
       {error && <div className="error">{error}</div>}
-      
+
       <form onSubmit={handleSubmit} className="auth-form">
         <span className="label-input">
           <label htmlFor="email">Email</label>
@@ -65,7 +66,7 @@ function Login() {
             required
             placeholder="Enter your password"
           />
-          <button className="show-password"  type="button" onClick={() => setShowPassword(prev => !prev)}>{showPassword ? `Hide` : 'Show'}</button>
+          <button className="show-password" type="button" onClick={() => setShowPassword(prev => !prev)}>{showPassword ? `Hide` : 'Show'}</button>
         </span>
         <div className="forgot-password">
           <Link to="/forgot-password">Forgot password?</Link>

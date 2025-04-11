@@ -10,15 +10,16 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState();
   const [loading, setLoading] = useState(true);
   const [locale, setLocale] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
+    const userId = localStorage.getItem("userId");
+    if (token && userId) {
       api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      setUser({ token });
+      setUser({ token, userId });
     }
     const localStorageLocale = localStorage.getItem('locale');
     if (!localStorageLocale || !localeCurrencyMap[localStorageLocale]) {
