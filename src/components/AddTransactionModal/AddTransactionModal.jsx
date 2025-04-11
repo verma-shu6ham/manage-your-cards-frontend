@@ -7,6 +7,7 @@ import { formatError } from '../../utils/errorHandler';
 import { withErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
 
 import "./AddTransactionModal.css";
+import { trackEvent } from "../../utils/ga.js";
 
 const AddTransactionModal = ({ isOpen, onClose, preselectedCardId, onTransactionAdded }) => {
     const { locale } = useAuth();
@@ -86,6 +87,12 @@ const AddTransactionModal = ({ isOpen, onClose, preselectedCardId, onTransaction
             }
 
             onTransactionAdded?.();
+            trackEvent({
+                action: 'add_transaction',
+                category: 'transaction',
+                label: 'Add new transaction button',
+                value: Number.parseFloat(amount)
+              });
             resetForm();
             onClose();
         } catch (err) {

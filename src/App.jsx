@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext/AuthContext';
+import React, {useState, useEffect} from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { AuthProvider, useAuth } from './contexts/AuthContext/AuthContext';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import PublicRoute from './components/PublicRoute/PublicRoute';
 import Navbar from './components/Navbar/Navbar';
@@ -21,8 +21,26 @@ import UpdateAlert from './components/UpdateAlert/UpdateAlert';
 import Landing from './pages/Landing/Landing';
 import { ThemeProvider } from './contexts/ThemeContext/ThemeContext';
 import { TooltipContext } from './contexts/TooltipContext';
+import { initGA, trackPageView, trackReferral, trackEngagementTime, setUserId } from './utils/ga';
 import './App.css';
 import './ScrollStyles.css';
+
+// Page view tracker component
+const PageViewTracker = () => {
+  const location = useLocation();
+  const { user } = useAuth();
+  useEffect(() => {
+    if (user?.userId) {
+      setUserId(user.userId);
+    }
+  }, [user]);
+  
+  useEffect(() => {
+    trackPageView(location.pathname);
+  }, [location]);
+
+  return null;
+};
 
 // NavigationHandler Component to handle navbar visibility
 const NavigationHandler = ({ children }) => {
@@ -62,13 +80,20 @@ function App() {
   const [tooltipContent, setTooltipContent] = useState("");
   const [showTooltip, setShowTooltip] = useState(false);
 
+  useEffect(() => {
+    // Initialize GA and track initial data
+    initGA();
+    trackReferral();
+    trackEngagementTime();
+  }, []);
+
   return (
-    <AuthProvider>
-      <ThemeProvider>
-        <TooltipContext.Provider value={[setTooltipContent, setShowTooltip, tooltipContent, showTooltip]}>
+      <AuthProvider>
+        <ThemeProvider>
+          <TooltipContext.Provider value={[setTooltipContent, setShowTooltip, tooltipContent, showTooltip]}>
           <Router>
             <div className="app">
-              <main className="main-content">
+               <main className="main-content">
                 <NavigationHandler>
                   {/* PWA Install Prompt */}
                   <PWAInstallPrompt />
@@ -76,6 +101,7 @@ function App() {
                   <OfflineAlert />
                   {/* Update Alert */}
                   <UpdateAlert />
+                  <PageViewTracker />
                 </NavigationHandler>
               </main>
             </div>
@@ -94,9 +120,9 @@ function App() {
               </div>
             </div>
           )}
-        </TooltipContext.Provider>
-      </ThemeProvider>
-    </AuthProvider>
+          </TooltipContext.Provider>
+        </ThemeProvider>
+      </AuthProvider>
   );
 }
 

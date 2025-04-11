@@ -7,6 +7,7 @@ import InfoIcon from '../../components/InfoIcon/InfoIcon';
 import './UpdateBalanceModal.css';
 import { formatError } from '../../utils/errorHandler';
 import { withErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
+import { trackEvent } from '../../utils/ga.js';
 
 const UpdateBalanceModal = ({ isOpen, onClose, onFetchCardsData, cards = [], preselectedCardId }) => {
   const [realTimeAvailable, setRealTimeAvailable] = useState("");
@@ -38,6 +39,12 @@ const UpdateBalanceModal = ({ isOpen, onClose, onFetchCardsData, cards = [], pre
       }
       await updateRealTimeAvailableCredit(selectedCardId, Number(realTimeAvailable));
       onFetchCardsData();
+      trackEvent({
+        action: 'update_real_time_available',
+        category: 'card',
+        label: 'Update real-time available credit',
+        value: Number.parseFloat(realTimeAvailable)
+      });
       setRealTimeAvailable("");
       setError("");
       onClose();

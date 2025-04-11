@@ -8,6 +8,7 @@ import { useAuth } from "../../contexts/AuthContext/AuthContext.jsx";
 import { withErrorBoundary } from '../ErrorBoundary/ErrorBoundary'
 import { formatError } from '../../utils/errorHandler.js';
 import _ from 'lodash';
+import { trackEvent } from '../../utils/ga.js';
 
 import './EditTransactionModal.css';
 
@@ -111,6 +112,12 @@ const EditTransactionModal = ({ isOpen, onClose, transaction, onTransactionEdite
     try {
       await updateTransaction(transaction._id, formData);
       onTransactionEdited();
+      trackEvent({
+        action: 'edit_transaction',
+        category: 'transaction',
+        label: 'Edit transaction button',
+        value: Number.parseFloat(formData.amount)
+      });
     } catch (err) {
       const formattedError = formatError(err);
       setError(formattedError.message);

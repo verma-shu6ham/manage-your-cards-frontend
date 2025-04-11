@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faCreditCard } from '@fortawesome/free-solid-svg-icons';
 import { addCreditCard } from '../../services/api';
 import './AddCardModal.css';
-import { formatDateTime } from '../../utils/mathUtils';
 import { formatError } from '../../utils/errorHandler';
 import { withErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
+import { trackEvent } from '../../utils/ga.js';
 
 const AddCardModal = ({ isOpen, onClose, onCardAdded }) => {
   const [formData, setFormData] = useState({
@@ -43,6 +43,11 @@ const AddCardModal = ({ isOpen, onClose, onCardAdded }) => {
       await addCreditCard(cardData);
       onCardAdded();
       onClose();
+      trackEvent({
+        action: 'add_card',
+        category: 'card',
+        label: 'Add new card button'
+      });
       setFormData({
         cardName: '',
         cardNumber: '',
