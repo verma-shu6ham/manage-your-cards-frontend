@@ -38,7 +38,6 @@ function CreditCardsTransactions() {
     setLoading(true);
     try {
       const fetchedTransactions = await getTransactions(filters);
-      console.log(fetchedTransactions.transactions);
       setTransactions(fetchedTransactions.transactions);
     } catch (error) {
       const formattedError = formatError(error);
