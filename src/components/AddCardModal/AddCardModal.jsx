@@ -106,9 +106,9 @@ const AddCardModal = ({ isOpen, onClose, onCardAdded }) => {
               onChange={handleChange}
               required
               placeholder="Enter card number"
-              maxLength="16"
-              pattern="\d{16}"
-              title="Please enter a valid 16-digit card number"
+              maxLength="19"
+              pattern="\d{13,19}"
+              title="Please enter a valid card number (13 to 19 digits)"
             />
           </div>
 
