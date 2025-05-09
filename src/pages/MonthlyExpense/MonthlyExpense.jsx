@@ -23,7 +23,7 @@ function MonthlyExpense() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
-  const [currentFilters, setCurrentFilters] = useState({ pageTitle: 'monthlyExpenseTxs' });
+  const [currentFilters, setCurrentFilters] = useState({ pageTitle: 'monthlyExpenseTxs',  category: "Monthly Expense" });
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);

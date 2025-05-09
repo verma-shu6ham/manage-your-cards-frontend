@@ -55,8 +55,8 @@ const TransactionCharts = ({ filters }) => {
   });
 
   // Determine if we're in the Monthly Expense view
-  const isMonthlyExpenseView = filters && filters.category === "Monthly Expense" && filters.paymentMethod === "cash";
-  const isTransactionsView = filters?.paymentMethod ? false : true;
+  const isMonthlyExpenseView = filters?.pageTitle === 'monthlyExpenseTxs';
+  const isTransactionsView = filters?.pageTitle !== 'monthlyExpenseTxs';
 
   const months = [
     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
