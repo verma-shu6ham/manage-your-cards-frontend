@@ -22,7 +22,7 @@ function Transactions() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
-  const [currentFilters, setCurrentFilters] = useState();
+  const [currentFilters, setCurrentFilters] = useState({ pageTitle: 'transactions' });
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -179,6 +179,7 @@ function Transactions() {
           isOpen={isFilterModalOpen}
           onClose={() => setIsFilterModalOpen(false)}
           onApplyFilters={handleApplyFilters}
+          allTransactions={true}
           currentFilters={currentFilters}
         />}
 

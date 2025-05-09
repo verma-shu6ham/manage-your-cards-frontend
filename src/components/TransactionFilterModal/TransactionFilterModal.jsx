@@ -4,7 +4,7 @@ import "./TransactionFilterModal.css";
 import { formatError } from '../../utils/errorHandler';
 import { withErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
 
-function TransactionFilterModal({ isOpen, onClose, onApplyFilters, monthlyExpenseTx = false, currentFilters }) {
+function TransactionFilterModal({ isOpen, onClose, onApplyFilters, allTransactions= false, monthlyExpenseTx = false, currentFilters }) {
   const [cards, setCards] = useState([]);
   const [categories, setCategories] = useState([]);
   const [filters, setFilters] = useState({
@@ -17,7 +17,8 @@ function TransactionFilterModal({ isOpen, onClose, onApplyFilters, monthlyExpens
     minAmount: currentFilters?.minAmount || "",
     maxAmount: currentFilters?.maxAmount || "",
     status: currentFilters?.status || "",
-    paymentMethod: ""
+    paymentMethod: "",
+    pageTitle: currentFilters?.pageTitle || "",
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false)
@@ -99,7 +100,7 @@ function TransactionFilterModal({ isOpen, onClose, onApplyFilters, monthlyExpens
           <div className="filter-section">
             <h3>Select Cards</h3>
             <div className="cards-grid">
-              {monthlyExpenseTx && <label key="cash" className="card-checkbox">
+              {(monthlyExpenseTx || allTransactions) && <label key="cash" className="card-checkbox">
                 <input
                   type="checkbox"
                   checked={filters.paymentMethod}
